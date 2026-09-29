@@ -35,4 +35,10 @@ Execute o typecheck após a primeira execução de dev ou build, que gera os tip
 
 Execute os comandos npm dentro de `frontend/`. As rotas são a base inicial. O carregamento do JSON, a interface completa e as estruturas serão implementados nas respectivas issues.
 
+## Tema da interface
+
+A paleta escura está em `frontend/app/globals.css`, com variáveis CSS e integração ao Tailwind via `@theme inline`. Use `bg-background` para o fundo, `bg-surface` para superfícies, `border-border` para bordas, `text-foreground` para texto principal e `text-muted` para texto secundário. Nas ações, use `bg-primary hover:bg-primary-hover`; `text-accent` e `outline-accent` disponibilizam a cor de destaque.
+
+O CSS global define a aparência de campos e botões, placeholders, estados desabilitados, hover e foco visível para navegação por teclado. Os estilos ficam em `@layer base`, permitindo ajustes com utilitários nos componentes.
+
 Referências: [Next.js](https://nextjs.org/docs/app/getting-started/installation) e [Tailwind CSS](https://tailwindcss.com/docs/installation/framework-guides/nextjs).
