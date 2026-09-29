@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Header from "@/components/Header";
 import MovieGrid from "@/components/MovieGrid";
 import SearchBar from "@/components/SearchBar";
 import YearButtons from "@/components/YearButtons";
@@ -37,31 +38,35 @@ export default function ExamplePage() {
   }
 
   return (
-    <main className="mx-auto max-w-5xl space-y-8 px-6 py-10">
-      <div className="space-y-3">
-        <h1 className="text-3xl font-bold">Catálogo de exemplo</h1>
-        <p className="text-muted">
-          Experimente buscar pelo início do título e selecionar um ano. Os filmes desta página são fictícios.
-        </p>
-      </div>
-
-      <section aria-label="Filtros" className="space-y-6 rounded-lg border border-border bg-surface p-5">
-        <SearchBar value={title} onChange={setTitle} />
-        <YearButtons years={years} selectedYear={selectedYear} onSelectYear={setSelectedYear} />
-        <button type="button" onClick={clearFilters} disabled={!title && selectedYear === null}>
-          Limpar filtros
-        </button>
-      </section>
-
-      <section aria-labelledby="example-results" className="space-y-4">
-        <div className="flex flex-wrap items-baseline justify-between gap-2">
-          <h2 id="example-results" className="text-xl font-bold">Filmes</h2>
-          <p role="status" className="text-sm text-muted">
-            {filteredMovies.length} {filteredMovies.length === 1 ? "filme encontrado" : "filmes encontrados"}
+    <>
+      <Header search={<SearchBar value={title} onChange={setTitle} />} />
+      <main className="mx-auto max-w-5xl space-y-8 px-6 py-10">
+        <div className="space-y-3">
+          <h1 className="text-3xl font-bold">Catálogo de exemplo</h1>
+          <p className="text-muted">
+            Experimente buscar pelo início do título e selecionar um ano. Os filmes desta página são fictícios.
           </p>
         </div>
-        <MovieGrid movies={filteredMovies} />
-      </section>
-    </main>
+
+        <div className="grid gap-8 md:grid-cols-[12rem_minmax(0,1fr)]">
+          <aside aria-label="Filtro por ano" className="space-y-5 self-start rounded-lg border border-border bg-surface p-5">
+            <YearButtons years={years} selectedYear={selectedYear} onSelectYear={setSelectedYear} layout="column" />
+            <button type="button" onClick={clearFilters} disabled={!title && selectedYear === null} className="w-full">
+              Limpar filtros
+            </button>
+          </aside>
+
+          <section aria-labelledby="example-results" className="min-w-0 space-y-4">
+            <div className="flex flex-wrap items-baseline justify-between gap-2">
+              <h2 id="example-results" className="text-xl font-bold">Filmes</h2>
+              <p role="status" className="text-sm text-muted">
+                {filteredMovies.length} {filteredMovies.length === 1 ? "filme encontrado" : "filmes encontrados"}
+              </p>
+            </div>
+            <MovieGrid movies={filteredMovies} />
+          </section>
+        </div>
+      </main>
+    </>
   );
 }

@@ -4,19 +4,21 @@ export type YearButtonsProps = {
   years: readonly number[];
   selectedYear: number | null;
   onSelectYear: (year: number | null) => void;
+  layout?: "row" | "column";
 };
 
 export default function YearButtons({
   years,
   selectedYear,
   onSelectYear,
+  layout = "row",
 }: YearButtonsProps) {
   const options = [null, ...years];
 
   return (
     <fieldset className="min-w-0 space-y-3">
       <legend className="font-semibold">Ano de lançamento</legend>
-      <div className="flex flex-wrap gap-2">
+      <div className={layout === "column" ? "flex flex-col gap-2" : "flex flex-wrap gap-2"}>
         {options.map((year) => (
           <button
             key={year ?? "all"}
@@ -24,9 +26,11 @@ export default function YearButtons({
             aria-pressed={selectedYear === year}
             onClick={() => onSelectYear(year)}
             className={
-              selectedYear === year
-                ? "border-accent bg-primary-hover text-foreground"
-                : "border-border bg-primary text-foreground hover:bg-primary-hover"
+              `${layout === "column" ? "w-full text-left" : ""} ${
+                selectedYear === year
+                  ? "border-accent bg-primary-hover text-foreground"
+                  : "border-border bg-primary text-foreground hover:bg-primary-hover"
+              }`
             }
           >
             {year ?? "Todos os anos"}
