@@ -1,12 +1,11 @@
 import MovieCard from "./MovieCard";
-import type { Movie, MovieAccessHandler } from "./types";
+import type { Movie } from "./types";
 
 export type MovieGridProps = {
   movies: readonly Movie[];
-  onMovieAccess?: MovieAccessHandler;
 };
 
-export default function MovieGrid({ movies, onMovieAccess }: MovieGridProps) {
+export default function MovieGrid({ movies }: MovieGridProps) {
   if (movies.length === 0) {
     return <p role="status" className="text-muted">Nenhum filme encontrado.</p>;
   }
@@ -18,7 +17,7 @@ export default function MovieGrid({ movies, onMovieAccess }: MovieGridProps) {
     >
       {movies.map((movie) => (
         <li key={movie.id} className="min-w-0">
-          <MovieCard movie={movie} onMovieAccess={onMovieAccess} />
+          <MovieCard movie={movie} />
         </li>
       ))}
     </ul>

@@ -4,5 +4,3 @@ export type Movie = {
   year: number;
   posterUrl?: string | null;
 };
-
-export type MovieAccessHandler = (movie: Movie) => void;

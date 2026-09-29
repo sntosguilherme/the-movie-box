@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="450" viewBox="0 0 300 450">
+  <rect width="300" height="450" fill="#1A1517"/>
+  <circle cx="150" cy="175" r="76" fill="#C43B5B"/>
+  <path d="M0 325 100 205 180 285 245 225 300 280v170H0Z" fill="#5A1024"/>
+  <path d="M0 375 125 275 220 350 300 315v135H0Z" fill="#30010F"/>
+  <text x="150" y="394" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" letter-spacing="3" fill="#F7F3F4">CINEMA</text>
+  <text x="150" y="422" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" letter-spacing="2" fill="#B9A9AE">CATÁLOGO DE EXEMPLO</text>
+</svg>

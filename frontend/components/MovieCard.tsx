@@ -3,14 +3,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import type { Movie, MovieAccessHandler } from "./types";
+import type { Movie } from "./types";
 
 export type MovieCardProps = {
   movie: Movie;
-  onMovieAccess?: MovieAccessHandler;
 };
 
-export default function MovieCard({ movie, onMovieAccess }: MovieCardProps) {
+export default function MovieCard({ movie }: MovieCardProps) {
   const [failedPoster, setFailedPoster] = useState<string | null>(null);
   const posterUrl = movie.posterUrl?.trim();
   const showPoster = posterUrl && posterUrl !== failedPoster;
@@ -19,7 +18,6 @@ export default function MovieCard({ movie, onMovieAccess }: MovieCardProps) {
     <article className="h-full">
       <Link
         href={`/filmes/${encodeURIComponent(String(movie.id))}`}
-        onClick={() => onMovieAccess?.(movie)}
         className="group block h-full overflow-hidden rounded-lg border border-border bg-surface hover:border-accent"
       >
         <div className="flex aspect-[2/3] items-center justify-center bg-background">
