@@ -30,10 +30,10 @@ Execute o typecheck após a primeira execução de dev ou build, que gera os tip
 - `frontend/`: aplicação Next.js e suas configurações.
 - `frontend/app/`: rotas `/` e `/filmes/[id]`, layout e CSS global.
 - `frontend/components/`: componentes reutilizáveis da interface.
-- `backend/lib/`: carregamento de dados, consultas, AVL e skip list.
+- `backend/src/`: catálogo em splay tree, carregamento, consultas e CLI; AVL e skip list virão depois.
 - `pre-processing/`: preparação do dataset em Python.
 
-Execute os comandos npm dentro de `frontend/`. As rotas são a base inicial. O carregamento do JSON, a interface completa e as estruturas serão implementados nas respectivas issues.
+Execute os comandos acima dentro de `frontend/`. O backend tem comandos próprios em `backend/README.md`. As rotas ainda são a base inicial; a interface completa, a AVL e a skip list serão implementadas nas respectivas issues.
 
 ## Tema da interface
 
