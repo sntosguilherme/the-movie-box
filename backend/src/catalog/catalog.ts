@@ -7,7 +7,7 @@ export class Catalog {
   readonly tree = new SplayTree();
   readonly avl = new AVLTree();
 
-  constructor(movies: Iterable) {
+  constructor(movies: Iterable ) {
     // Constrói a AVL a partir do catálogo, conforme exigido.
     for (const movie of movies) {
       this.tree.insert(movie);
@@ -25,7 +25,7 @@ export class Catalog {
     return this.tree.openDetails(id);
   }
 
-  resolveIds(ids: Iterable): Filme[] {
+  resolveIds(ids: Iterable ): Filme[] {
     const movies: Filme[] = [];
     for (const id of ids) {
       const movie = this.tree.peekById(id);
@@ -38,27 +38,25 @@ export class Catalog {
    * CAMADA DE CONSULTA (Ano Exato): 
    * Encontra o ano na AVL, percorre a lista de IDs e busca os filmes completos na Splay Tree.
    */
-  searchByExactYear(year: number): Filme[] {
-    const ids = this.avl.getIdsByYear(year);
-    
-    // Integra a consulta ao filtro e retorna array vazio para anos sem filmes
-    if (ids.length === 0) return []; 
-    
-    return this.resolveIds(ids);
-  }
+  searchByExactYear(year: number, skip = 0, limit = 10): Filme[] { // Recebe parâmetros de limite
+  const ids = this.avl.getIdsByYear(year);
+  if (ids.length === 0) return []; 
+
+  const paginatedIds = ids.slice(skip, skip + limit); // Corta a lista de IDs
+  return this.resolveIds(paginatedIds); // Resolve apenas os 10 necessários
+}
 
   /** 
    * CAMADA DE CONSULTA (Intervalo de Anos):
    * Encontra os anos na AVL, percorre os IDs e busca os filmes completos na Splay Tree.
    */
-  searchByYearRange(startYear: number, endYear: number): Filme[] {
-    const ids = this.avl.getIdsByYearRange(startYear, endYear);
-    
-    if (ids.length === 0) return [];
-    
-    return this.resolveIds(ids);
-  }
+  searchByYearRange(startYear: number, endYear: number, skip = 0, limit = 10): Filme[] { // Recebe parâmetros
+  const ids = this.avl.getIdsByYearRange(startYear, endYear);
+  if (ids.length === 0) return [];
 
+  const paginatedIds = ids.slice(skip, skip + limit); // Corta a lista
+  return this.resolveIds(paginatedIds); // Resolve apenas o necessário
+}
   /**
    * Lista os anos disponíveis em ordem.
    */
