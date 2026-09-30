@@ -13,6 +13,7 @@
 }
 
 @theme inline {
+  --font-sans: var(--font-plus-jakarta-sans), Arial, Helvetica, sans-serif;
   --color-background: var(--background);
   --color-surface: var(--surface);
   --color-primary: var(--primary);
@@ -28,7 +29,7 @@
     min-height: 100vh;
     background-color: var(--background);
     color: var(--foreground);
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: var(--font-plus-jakarta-sans), Arial, Helvetica, sans-serif;
   }
 
   :where(input:not([type="checkbox"], [type="radio"], [type="range"], [type="color"], [type="file"], [type="hidden"]), select, textarea) {
