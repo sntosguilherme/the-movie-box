@@ -16,7 +16,7 @@ export function getCatalog(): Promise<Catalog> {
 
 export const PAGE_SIZE = 24;
 
-/** Sem título, lista pelo ano da AVL ou percorre a splay tree
+/** Sem título, lista pelo ano da AVL ou percorre a splay tree por níveis
  * um item extra indica se há mais resultados. */
 export async function searchCatalog(
   title: string,
@@ -31,7 +31,7 @@ export async function searchCatalog(
     found = catalog.searchByExactYear(year, 0, limit + 1);
   } else {
     found = [];
-    for (const filme of catalog.tree.movies()) {
+    for (const filme of catalog.tree.moviesLevelOrder()) {
       if (found.length > limit) break;
       found.push(filme);
     }

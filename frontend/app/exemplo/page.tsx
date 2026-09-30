@@ -44,7 +44,7 @@ export default function ExamplePage() {
   return (
     <>
       <Header search={<SearchBar value={title} onChange={setTitle} />} />
-      <main className="mx-auto max-w-5xl space-y-8 px-6 py-10">
+      <main className="w-full space-y-8 px-4 py-10 sm:px-6 lg:px-8">
         <div className="space-y-3">
           <h1 className="text-3xl font-bold">Catálogo de exemplo</h1>
           <p className="text-muted">
@@ -52,7 +52,7 @@ export default function ExamplePage() {
           </p>
         </div>
 
-        <div className="grid gap-8 md:grid-cols-[12rem_minmax(0,1fr)]">
+        <div className="grid gap-8 md:grid-cols-[15rem_minmax(0,1fr)]">
           <aside aria-label="Filtro por ano" className="space-y-5 self-start rounded-lg border border-border bg-surface p-5">
             <YearButtons years={years} selectedYear={selectedYear} onSelectYear={setSelectedYear} layout="column" />
             <button type="button" onClick={clearFilters} disabled={!title && selectedYear === null} className="w-full">

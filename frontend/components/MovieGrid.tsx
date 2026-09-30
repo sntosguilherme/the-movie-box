@@ -13,7 +13,7 @@ export default function MovieGrid({ movies }: MovieGridProps) {
   return (
     <ul
       aria-label="Filmes do catálogo"
-      className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
+      className="grid grid-cols-[repeat(auto-fill,minmax(min(100%,14rem),1fr))] gap-6"
     >
       {movies.map((movie) => (
         <li key={movie.id} className="min-w-0">

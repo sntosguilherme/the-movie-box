@@ -3,7 +3,7 @@ class IdNode {
   constructor(public id: number, public next: IdNode | null = null) {}
 }
 
-class IdLinkedList {
+class IdLinkedList implements Iterable<number> {
   head: IdNode | null = null;
   tail: IdNode | null = null;
 
@@ -18,14 +18,12 @@ class IdLinkedList {
     }
   }
 
-  toArray(): number[] {
-    const result: number[] = [];
+  *[Symbol.iterator](): IterableIterator<number> {
     let current = this.head;
     while (current) {
-      result.push(current.id);
+      yield current.id;
       current = current.next;
     }
-    return result;
   }
 }
 
@@ -108,38 +106,38 @@ export class AVLTree {
   }
 
   /** Consulta de um ano exato, retornando array vazio caso não exista. */
-  getIdsByYear(year: number): number[] {
+  *getIdsByYear(year: number): IterableIterator<number> {
     let current = this.root;
     while (current) {
-      if (year === current.year) return current.ids.toArray();
+      if (year === current.year) {
+        yield* current.ids;
+        return;
+      }
       current = year < current.year ? current.left : current.right;
     }
-    return [];
   }
 
   /** Consulta de um intervalo de anos, percorrendo a árvore em ordem. */
-  getIdsByYearRange(startYear: number, endYear: number): number[] {
-    const result: number[] = [];
-    this.rangeSearch(this.root, startYear, endYear, result);
-    return result;
+  *getIdsByYearRange(startYear: number, endYear: number): IterableIterator<number> {
+    yield* this.rangeSearch(this.root, startYear, endYear);
   }
 
-  private rangeSearch(node: AVLNode | null, start: number, end: number, result: number[]): void {
+  private *rangeSearch(node: AVLNode | null, start: number, end: number): IterableIterator<number> {
     if (!node) return;
     
     // Se o ano atual é maior que o início, pode haver nós válidos à esquerda
     if (start < node.year) {
-      this.rangeSearch(node.left, start, end, result);
+      yield* this.rangeSearch(node.left, start, end);
     }
     
     // Se está dentro do intervalo, adiciona os IDs
     if (node.year >= start && node.year <= end) {
-      result.push(...node.ids.toArray());
+      yield* node.ids;
     }
     
     // Se o ano atual é menor que o fim, pode haver nós válidos à direita
     if (end > node.year) {
-      this.rangeSearch(node.right, start, end, result);
+      yield* this.rangeSearch(node.right, start, end);
     }
   }
 

@@ -25,10 +25,10 @@ function showRoot(): void {
 
 function help(): void {
   console.log(`Comandos:
-  lista [n]       Lista até n filmes por ID (padrão: 10), sem splay
+  lista [n]       Lista até n filmes por níveis (padrão: 10), sem splay
   titulo <texto>  Busca por título, sem splay
   consultar <id>  Consulta por ID, sem splay
-  abrir <id>      Abre detalhes e faz splay parcial (limite = 2 × aberturas)
+  abrir <id>      Abre detalhes; splay parcial nas duas primeiras aberturas
   buscar <id>     Busca por ID e faz splay completo
   remover <id>    Remove um filme da árvore
   raiz            Mostra a raiz atual
@@ -48,7 +48,7 @@ function access(id: number, mode: "abrir" | "buscar"): void {
   console.log(label(movie));
   if (mode === "abrir") {
     const opens = catalog.tree.getDetailOpenCount(id);
-    console.log(`Abertura ${opens}; limite: ${2 * opens} rotações.`);
+    console.log(`Abertura ${opens}; ${opens < 3 ? `limite de ${2 ** (opens + 1)} rotações` : opens === 3 ? "sobe até o nível 3" : "splay completo"}.`);
   }
   console.log(`Profundidade: ${depthBefore} → ${catalog.tree.depthOf(id)} | Raiz: ${rootBefore} → ${catalog.tree.rootId}`);
 }
@@ -72,7 +72,7 @@ for await (const line of input) {
         break;
       }
       let shown = 0;
-      for (const movie of catalog.tree.movies()) {
+      for (const movie of catalog.tree.moviesLevelOrder()) {
         console.log(label(movie));
         if (++shown >= requested) break;
       }
