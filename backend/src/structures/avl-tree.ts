@@ -144,7 +144,7 @@ export class AVLTree {
   }
 
   /** Gerador para listar os anos da árvore em ordem crescente. */
-  *years(): IterableIterator {
+  *years(): IterableIterator<number> {
     const stack: AVLNode[] = [];
     let current = this.root;
     
