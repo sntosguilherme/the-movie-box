@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { Catalog } from "../src/catalog/catalog.js";
-import type { Filme } from "../src/models/filme.js";
+import { Catalog } from "../src/catalog/catalog.ts";
+import type { Filme } from "../src/models/filme.ts";
 
 // Helper para criar filmes de teste facilmente
 const mockMovie = (id: number, title: string, year: string): Filme => ({

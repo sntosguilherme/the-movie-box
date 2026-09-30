@@ -1,6 +1,6 @@
 import { readFile } from "node:fs/promises";
-import type { Filme } from "../models/filme.js";
-import { Catalog } from "./catalog.js";
+import type { Filme } from "../models/filme.ts";
+import { Catalog } from "./catalog.ts";
 
 /** Carrega o JSON completo ou uma amostra inicial para a CLI. */
 export async function loadCatalog(filePath: string, limit?: number): Promise<Catalog> {

@@ -1,7 +1,7 @@
 import { fileURLToPath } from "node:url";
 import { createInterface } from "node:readline";
-import { loadCatalog } from "./catalog/load-catalog.js";
-import type { Filme } from "./models/filme.js";
+import { loadCatalog } from "./catalog/load-catalog.ts";
+import type { Filme } from "./models/filme.ts";
 
 const dataPath = fileURLToPath(new URL("../../../data/movies.json", import.meta.url));
 let catalog = await loadCatalog(dataPath, 100);

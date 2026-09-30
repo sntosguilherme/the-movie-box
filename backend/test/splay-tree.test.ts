@@ -1,8 +1,8 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { Catalog } from "../src/catalog/catalog.js";
-import type { Filme } from "../src/models/filme.js";
-import { SplayTree } from "../src/structures/splay-tree.js";
+import { Catalog } from "../src/catalog/catalog.ts";
+import type { Filme } from "../src/models/filme.ts";
+import { SplayTree } from "../src/structures/splay-tree.ts";
 
 const movie = (id: number, title = `Filme ${id}`): Filme => ({
   id, title, overview: "", genres: [], release_date: "2000-01-01", poster_url: null,
