@@ -47,11 +47,13 @@ test("detalhes aumentam gradualmente as rotações; consultas não mudam a raiz"
   assert.equal(tree.getDetailOpenCount(999), 0);
 });
 
-test("busca por título percorre sem splay e ignora caixa", () => {
-  const catalog = new Catalog([movie(3, "Ação Total"), movie(1, "Outro"), movie(2, "Mais AÇÃO")]);
-  assert.deepEqual(catalog.searchByTitle(" ação ").map(({ id }) => id), [2, 3]);
+test("busca por título percorre sem splay e compara o início ignorando caixa e acentos", () => {
+  const catalog = new Catalog([movie(3, "Ação Total"), movie(1, "Outro"), movie(2, "Mais AÇÃO"), movie(4, "  ACAO final")]);
+  assert.deepEqual(catalog.searchByTitle(" ação ").map(({ id }) => id), [3, 4]);
+  assert.deepEqual(catalog.searchByTitle("acao t").map(({ id }) => id), [3]);
+  assert.deepEqual(catalog.searchByTitle("total"), []);
   assert.deepEqual(catalog.searchByTitle(" "), []);
-  assert.equal(catalog.tree.rootId, 2);
+  assert.equal(catalog.tree.rootId, 4);
 });
 
 test("remoção e buscas em sequência mantêm a ordem da árvore", () => {

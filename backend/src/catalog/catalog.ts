@@ -3,6 +3,10 @@ import type { Filme } from "../models/filme.js";
 import { SplayTree } from "../structures/splay-tree.js";
 import { AVLTree } from "../structures/avl-tree.js";
 
+function normalizeTitle(value: string): string {
+  return value.normalize("NFD").replace(/\p{M}/gu, "").trim().toLocaleLowerCase("pt-BR");
+}
+
 export class Catalog {
   readonly tree = new SplayTree();
   readonly avl = new AVLTree();
@@ -66,15 +70,20 @@ export class Catalog {
     return [...this.avl.years()];
   }
 
-  searchByTitle(query: string, skip = 0, limit = 10): Filme[] {
-    const term = query.trim().toLocaleLowerCase("pt-BR");
+  /**
+   * Busca pelo início do título. Com ano selecionado, compara apenas os filmes
+   * cujos IDs estão naquele ano da AVL; sem ano, percorre a splay tree.
+   */
+  searchByTitle(query: string, year?: number, skip = 0, limit = 10): Filme[] {
+    const term = normalizeTitle(query);
     if (!term) return [];
-    
+
+    const candidates = year === undefined ? this.tree.movies() : this.resolveIds(this.avl.getIdsByYear(year));
     const results: Filme[] = [];
     let matchCount = 0;
 
-    for (const movie of this.tree.movies()) {
-      if (movie.title.toLocaleLowerCase("pt-BR").includes(term)) {
+    for (const movie of candidates) {
+      if (normalizeTitle(movie.title).startsWith(term)) {
         if (matchCount >= skip && results.length < limit) {
           results.push(movie);
         }

@@ -91,3 +91,18 @@ test("Integração - IDs órfãos (inconsistência) são tratados graciosamente"
   // O resultado deve ser um array vazio, sem estourar erro de "Cannot read properties of undefined".
   assert.deepEqual(filmes2023, []);
 });
+
+test("Integração - Busca por título com ano selecionado compara apenas os filmes daquele ano", () => {
+  const catalog = new Catalog([
+    mockMovie(1, "Matrix", "1999"),
+    mockMovie(2, "Matrix Reloaded", "2003"),
+    mockMovie(3, "Matrix Revolutions", "2003"),
+    mockMovie(4, "Procurando Nemo", "2003")
+  ]);
+
+  const ids = (movies: Filme[]) => movies.map(f => f.id).sort((a, b) => a - b);
+  assert.deepEqual(ids(catalog.searchByTitle("matrix", 2003)), [2, 3]);
+  assert.deepEqual(ids(catalog.searchByTitle("matrix", 1999)), [1]);
+  assert.deepEqual(catalog.searchByTitle("matrix", 1980), []);
+  assert.deepEqual(ids(catalog.searchByTitle("matrix")), [1, 2, 3]);
+});
