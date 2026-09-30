@@ -15,12 +15,12 @@ test("AVLTree - Inserção e busca exata por ano com múltiplos IDs", () => {
   avl.insert(2005, 50);
 
   // Verificando retornos exatos
-  assert.deepEqual(avl.getIdsByYear(2001), [10, 20, 30]);
-  assert.deepEqual(avl.getIdsByYear(1999), [5]);
-  assert.deepEqual(avl.getIdsByYear(2005), [50]);
+  assert.deepEqual([...avl.getIdsByYear(2001)], [10, 20, 30]);
+  assert.deepEqual([...avl.getIdsByYear(1999)], [5]);
+  assert.deepEqual([...avl.getIdsByYear(2005)], [50]);
   
   // Verificando ano sem filmes
-  assert.deepEqual(avl.getIdsByYear(2010), []);
+  assert.deepEqual([...avl.getIdsByYear(2010)], []);
 });
 
 test("AVLTree - Busca por intervalo de anos (range search)", () => {
@@ -34,16 +34,16 @@ test("AVLTree - Busca por intervalo de anos (range search)", () => {
   avl.insert(2020, 6);
 
   // Intervalo contendo múltiplos anos
-  assert.deepEqual(avl.getIdsByYearRange(2005, 2015), [2, 3, 4, 5]);
+  assert.deepEqual([...avl.getIdsByYearRange(2005, 2015)], [2, 3, 4, 5]);
   
   // Intervalo mais amplo do que os dados existentes
-  assert.deepEqual(avl.getIdsByYearRange(1990, 2010), [1, 2, 3, 4]);
+  assert.deepEqual([...avl.getIdsByYearRange(1990, 2010)], [1, 2, 3, 4]);
   
   // Intervalo sem nenhum filme cadastrado
-  assert.deepEqual(avl.getIdsByYearRange(1980, 1999), []);
+  assert.deepEqual([...avl.getIdsByYearRange(1980, 1999)], []);
   
   // Intervalo de um ano apenas (comportamento de busca exata)
-  assert.deepEqual(avl.getIdsByYearRange(2005, 2005), [2, 3]);
+  assert.deepEqual([...avl.getIdsByYearRange(2005, 2005)], [2, 3]);
 });
 
 test("AVLTree - Listagem de anos em ordem crescente via gerador", () => {
@@ -77,6 +77,6 @@ test("AVLTree - Balanceamento implícito lida com inserção sequencial em pior 
   assert.deepEqual([...avl.years()], years);
   
   // Validando acesso aos extremos da árvore
-  assert.deepEqual(avl.getIdsByYear(1900), [1900]);
-  assert.deepEqual(avl.getIdsByYear(1999), [1999]);
+  assert.deepEqual([...avl.getIdsByYear(1900)], [1900]);
+  assert.deepEqual([...avl.getIdsByYear(1999)], [1999]);
 });

@@ -77,12 +77,11 @@ export class SplayTree {
     if (!node) return undefined;
     node.detailOpens++;
 
-    // Para a abertura i, são permitidas no máximo 2*i rotações:
-    // 2 na primeira, 4 na segunda, 6 na terceira, etc. Assim, acessos
-    // repetidos acabam levando o nó à raiz sem exigir a subida completa
-    // logo na primeira abertura de um nó profundo.
-    const limit = 2 * node.detailOpens;
-    this.splay(node, limit);
+    // Nas duas primeiras aberturas, o limite é 2^(i + 1) rotações. Na terceira,
+    // o filme sobe até o nível 3; na quarta, conclui o splay na raiz.
+    if (node.detailOpens < 3) this.splay(node, 2 ** (node.detailOpens + 1));
+    else if (node.detailOpens === 3) this.splayToDepth(node, 3);
+    else this.splay(node);
     return node.movie;
   }
 
@@ -128,6 +127,30 @@ export class SplayTree {
       current = stack.pop()!;
       yield current.movie;
       current = current.right;
+    }
+  }
+
+  /** Percurso em pré-ordem para exibir a raiz antes das subárvores. */
+  *moviesPreOrder(): IterableIterator<Filme> {
+    if (!this.root) return;
+    const stack: Node[] = [this.root];
+    while (stack.length) {
+      const node = stack.pop()!;
+      yield node.movie;
+      if (node.right) stack.push(node.right);
+      if (node.left) stack.push(node.left);
+    }
+  }
+
+  /** Percurso por níveis: raiz, filhos, netos e assim por diante. */
+  *moviesLevelOrder(): IterableIterator<Filme> {
+    if (!this.root) return;
+    const queue: Node[] = [this.root];
+    for (let index = 0; index < queue.length; index++) {
+      const node = queue[index];
+      yield node.movie;
+      if (node.left) queue.push(node.left);
+      if (node.right) queue.push(node.right);
     }
   }
 
@@ -189,5 +212,27 @@ export class SplayTree {
         rotations += 2;
       }
     }
+  }
+
+  private splayToDepth(node: Node, targetDepth: number): void {
+    while (node.parent && this.nodeDepth(node) > targetDepth) {
+      const parent = node.parent;
+      const grandparent = parent.parent;
+      if (!grandparent || this.nodeDepth(node) === targetDepth + 1) {
+        this.rotateUp(node);
+      } else if ((grandparent.left === parent) === (parent.left === node)) {
+        this.rotateUp(parent);
+        this.rotateUp(node);
+      } else {
+        this.rotateUp(node);
+        this.rotateUp(node);
+      }
+    }
+  }
+
+  private nodeDepth(node: Node): number {
+    let depth = 0;
+    for (let parent = node.parent; parent; parent = parent.parent) depth++;
+    return depth;
   }
 }

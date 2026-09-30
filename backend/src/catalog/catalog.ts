@@ -29,11 +29,14 @@ export class Catalog {
     return this.tree.openDetails(id);
   }
 
-  resolveIds(ids: Iterable<number>): Filme[] {
+  resolveIds(ids: Iterable<number>, skip = 0, limit = Infinity): Filme[] {
     const movies: Filme[] = [];
+    let index = 0;
     for (const id of ids) {
+      if (index++ < skip) continue;
       const movie = this.tree.peekById(id);
       if (movie) movies.push(movie);
+      if (movies.length >= limit) break;
     }
     return movies;
   }
@@ -43,11 +46,7 @@ export class Catalog {
    * Encontra o ano na AVL, percorre a lista de IDs e busca os filmes completos na Splay Tree.
    */
   searchByExactYear(year: number, skip = 0, limit = Infinity): Filme[] {
-    const ids = this.avl.getIdsByYear(year);
-    if (ids.length === 0) return [];
-
-    // Corta os IDs antes de resolver, para buscar na splay tree só a página pedida.
-    return this.resolveIds(ids.slice(skip, skip + limit));
+    return this.resolveIds(this.avl.getIdsByYear(year), skip, limit);
   }
 
   /** 
@@ -55,10 +54,7 @@ export class Catalog {
    * Encontra os anos na AVL, percorre os IDs e busca os filmes completos na Splay Tree.
    */
   searchByYearRange(startYear: number, endYear: number, skip = 0, limit = Infinity): Filme[] {
-    const ids = this.avl.getIdsByYearRange(startYear, endYear);
-    if (ids.length === 0) return [];
-
-    return this.resolveIds(ids.slice(skip, skip + limit));
+    return this.resolveIds(this.avl.getIdsByYearRange(startYear, endYear), skip, limit);
   }
 
   /**

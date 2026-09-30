@@ -30,11 +30,11 @@ test("Requisito: Construir AVL com os anos e IDs sem copiar objetos completos", 
   const catalog = new Catalog(mockMovies);
 
   // Verifica se a AVL agrupou os IDs corretamente por ano
-  assert.deepEqual(catalog.avl.getIdsByYear(2003).sort(), [104, 105]);
-  assert.deepEqual(catalog.avl.getIdsByYear(1999), [102]);
+  assert.deepEqual([...catalog.avl.getIdsByYear(2003)].sort(), [104, 105]);
+  assert.deepEqual([...catalog.avl.getIdsByYear(1999)], [102]);
   
   // Os nós da AVL devem conter apenas números (IDs)
-  const ids2003 = catalog.avl.getIdsByYear(2003);
+  const ids2003 = [...catalog.avl.getIdsByYear(2003)];
   assert.equal(typeof ids2003[0], "number");
 });
 

@@ -44,18 +44,18 @@ export default function CatalogBrowser({ years, title, year, nextLimit, movies, 
   return (
     <>
       <Header search={<SearchBar value={query} onChange={changeTitle} />} />
-      <main className="mx-auto max-w-5xl space-y-8 px-6 py-10">
+      <main className="w-full space-y-8 px-4 py-10 sm:px-6 lg:px-8">
         <div className="space-y-3">
           <h1 className="text-3xl font-bold">Catálogo de Filmes</h1>
           <p className="text-muted">Busque pelo início do título e filtre pelo ano de lançamento.</p>
         </div>
 
-        <div className="grid gap-8 md:grid-cols-[12rem_minmax(0,1fr)]">
+        <div className="grid gap-8 md:grid-cols-[15rem_minmax(0,1fr)]">
           <aside aria-label="Filtro por ano" className="space-y-5 self-start rounded-lg border border-border bg-surface p-5">
             <button type="button" onClick={clearFilters} disabled={!query.trim() && year === null} className="w-full">
               Limpar filtros
             </button>
-            <div className="max-h-64 overflow-y-auto pr-1 md:max-h-[60vh]">
+            <div>
               <YearButtons years={years} selectedYear={year} onSelectYear={(next) => navigate(query, next)} layout="column" />
             </div>
           </aside>

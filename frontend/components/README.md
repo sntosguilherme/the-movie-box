@@ -14,7 +14,7 @@ Os componentes usam a paleta de `app/globals.css`. Importe cada componente pelo 
 | --- | --- | --- |
 | `Header` | `search?: ReactNode` | Identidade do projeto e navegação para `/`; quando recebe a busca, mostra uma lupa que abre o campo no cabeçalho e pode ser fechada com o botão ou Escape. |
 | `SearchBar` | `value: string`, `onChange(value)` | Campo controlado; digitar informa o novo título e limpar informa `""`, devolvendo o foco ao campo. |
-| `YearButtons` | `years: readonly number[]`, `selectedYear: number \| null`, `onSelectYear(year)`, `layout?: "row" \| "column"` | Recebe os anos únicos disponíveis na AVL, na ordem desejada. `null` representa todos os anos. A seleção tem indicação visual e `aria-pressed`; `layout="column"` dispõe os anos na lateral. |
+| `YearButtons` | `years: readonly number[]`, `selectedYear: number \| null`, `onSelectYear(year)`, `layout?: "row" \| "column"` | Agrupa por décadas os anos disponíveis na AVL. A década mais recente, ou a do ano selecionado, começa aberta. `null` representa todos os anos; `layout="column"` dispõe os grupos na lateral. |
 | `MovieCard` | `movie: Movie` | Pôster, título, ano e link para `/filmes/[id]`. Pôster ausente ou com erro usa a imagem de cinema em `public/poster-placeholder.svg`, com texto alternativo acessível. |
 | `MovieGrid` | `movies: readonly Movie[]` | Grade responsiva, preservando a ordem recebida, com mensagem para resultados vazios. |
 

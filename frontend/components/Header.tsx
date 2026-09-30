@@ -21,7 +21,7 @@ export default function Header({ search }: HeaderProps) {
 
   return (
     <header className="border-b border-border bg-surface">
-      <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-4 px-6 py-5">
+      <div className="flex w-full flex-wrap items-center justify-between gap-4 px-4 py-5 sm:px-6 lg:px-8">
         <Link href="/" className="inline-flex items-center gap-3 rounded font-bold text-foreground">
           <Film aria-hidden="true" className="h-6 w-6 shrink-0 text-accent" />
           <span>Catálogo de Filmes <span className="text-muted">· ED II</span></span>
@@ -58,7 +58,7 @@ export default function Header({ search }: HeaderProps) {
               toggleRef.current?.focus();
             }
           }}
-          className="mx-auto max-w-5xl px-6 pb-5"
+          className="w-full px-4 pb-5 sm:px-6 lg:px-8"
         >
           {search}
         </div>
