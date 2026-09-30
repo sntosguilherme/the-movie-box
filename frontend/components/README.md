@@ -1,5 +1,11 @@
 # Componentes
 
+## Detalhes do filme
+
+`BackButton` liga ao catálogo em `/`. `MovieDetails` recebe `movie: Movie` e exibe título, ano, gêneros, sinopse e `PosterImage`. `PosterImage` recebe `title`, `posterUrl?` e `className?`, mantém proporção 2:3 e usa `/poster-placeholder.svg` quando o pôster está ausente ou falha. O tipo `Movie` também aceita `genres?: readonly string[]` e `overview?: string | null`.
+
+Para testar, execute `npm run dev` em `frontend/` e abra `/exemplo`. A seção "Prévia dos detalhes" oferece um filme com pôster e outro sem pôster.
+
 ## Contratos
 
 Os componentes usam a paleta de `app/globals.css`. Importe cada componente pelo seu arquivo em `@/components/`.

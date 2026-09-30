@@ -2,14 +2,16 @@
 
 import { useState } from "react";
 import Header from "@/components/Header";
+import BackButton from "@/components/BackButton";
+import MovieDetails from "@/components/MovieDetails";
 import MovieGrid from "@/components/MovieGrid";
 import SearchBar from "@/components/SearchBar";
 import YearButtons from "@/components/YearButtons";
 import type { Movie } from "@/components/types";
 
 const movies: readonly Movie[] = [
-  { id: "demo-1", title: "Além do Horizonte", year: 2024, posterUrl: "/exemplo-poster.svg" },
-  { id: "demo-2", title: "A Última Sessão", year: 2024 },
+  { id: "demo-1", title: "Além do Horizonte", year: 2024, posterUrl: "/exemplo-poster.svg", genres: ["Aventura", "Drama"], overview: "Uma jornada inesperada leva antigos amigos a descobrir novos caminhos." },
+  { id: "demo-2", title: "A Última Sessão", year: 2024, genres: ["Drama"], overview: "Um cinema de bairro reúne seus visitantes para uma noite inesquecível." },
   { id: "demo-3", title: "Noite de Estreia", year: 2021, posterUrl: "/exemplo-poster.svg" },
   { id: "demo-4", title: "Memórias de Verão", year: 2021 },
   { id: "demo-5", title: "O Caminho de Casa", year: 2019, posterUrl: "/exemplo-poster.svg" },
@@ -25,6 +27,8 @@ function normalizeTitle(value: string) {
 export default function ExamplePage() {
   const [title, setTitle] = useState("");
   const [selectedYear, setSelectedYear] = useState<number | null>(null);
+  const [selectedMovieId, setSelectedMovieId] = useState<string | number>(movies[0].id);
+  const selectedMovie = movies.find((movie) => movie.id === selectedMovieId) ?? movies[0];
   const normalizedTitle = normalizeTitle(title);
   const filteredMovies = movies.filter(
     (movie) =>
@@ -66,6 +70,28 @@ export default function ExamplePage() {
             <MovieGrid movies={filteredMovies} />
           </section>
         </div>
+
+        <section aria-labelledby="example-details" className="space-y-6 border-t border-border pt-8">
+          <div className="space-y-2">
+            <h2 id="example-details" className="text-2xl font-bold">Prévia dos detalhes</h2>
+            <p className="text-muted">Selecione um filme para testar os componentes de detalhes.</p>
+          </div>
+          <div className="flex flex-wrap gap-2" aria-label="Selecionar filme para prévia">
+            {movies.slice(0, 2).map((movie) => (
+              <button
+                key={movie.id}
+                type="button"
+                aria-pressed={selectedMovieId === movie.id}
+                onClick={() => setSelectedMovieId(movie.id)}
+                className={selectedMovieId === movie.id ? "border-accent" : ""}
+              >
+                {movie.title}
+              </button>
+            ))}
+          </div>
+          <BackButton />
+          <MovieDetails movie={selectedMovie} />
+        </section>
       </main>
     </>
   );
