@@ -1,7 +1,7 @@
 
-import type { Filme } from "../models/filme.js";
-import { SplayTree } from "../structures/splay-tree.js";
-import { AVLTree } from "../structures/avl-tree.js";
+import type { Filme } from "../models/filme.ts";
+import { SplayTree } from "../structures/splay-tree.ts";
+import { AVLTree } from "../structures/avl-tree.ts";
 
 function normalizeTitle(value: string): string {
   return value.normalize("NFD").replace(/\p{M}/gu, "").trim().toLocaleLowerCase("pt-BR");

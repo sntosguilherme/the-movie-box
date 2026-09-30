@@ -1,4 +1,4 @@
-import type { Filme } from "../models/filme.js";
+import type { Filme } from "../models/filme.ts";
 
 class Node {
   left: Node | null = null;

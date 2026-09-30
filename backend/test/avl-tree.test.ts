@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { AVLTree } from "../src/structures/avl-tree.js";
+import { AVLTree } from "../src/structures/avl-tree.ts";
 
 test("AVLTree - Inserção e busca exata por ano com múltiplos IDs", () => {
   const avl = new AVLTree();
