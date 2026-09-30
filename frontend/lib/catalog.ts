@@ -28,7 +28,7 @@ export async function searchCatalog(
   if (title.trim()) {
     found = catalog.searchByTitle(title, year ?? undefined, 0, limit + 1);
   } else if (year !== null) {
-    found = catalog.searchByExactYear(year).slice(0, limit + 1);
+    found = catalog.searchByExactYear(year, 0, limit + 1);
   } else {
     found = [];
     for (const filme of catalog.tree.movies()) {
