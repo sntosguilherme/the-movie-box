@@ -1,13 +1,35 @@
-import Header from "@/components/Header";
+import CatalogBrowser from "@/components/CatalogBrowser";
+import { getCatalog, PAGE_SIZE, searchCatalog } from "@/lib/catalog";
 
-export default function HomePage() {
+type HomePageProps = {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+};
+
+function param(value: string | string[] | undefined): string {
+  return typeof value === "string" ? value : "";
+}
+
+export default async function HomePage({ searchParams }: HomePageProps) {
+  const params = await searchParams;
+  const title = param(params.titulo);
+  const ano = param(params.ano);
+  const limite = param(params.limite);
+  const year = /^\d{4}$/.test(ano) ? Number(ano) : null;
+  const limit = /^\d+$/.test(limite)
+    ? Math.max(PAGE_SIZE, Number(limite))
+    : PAGE_SIZE;
+
+  const years = (await getCatalog()).listAvailableYears().reverse();
+  const { movies, hasMore } = await searchCatalog(title, year, limit);
+
   return (
-    <>
-      <Header />
-      <main className="mx-auto max-w-5xl px-6 py-16">
-        <h1 className="text-3xl font-bold">Catálogo de Filmes</h1>
-        <p className="mt-4 text-muted">Explore filmes por título e ano de lançamento.</p>
-      </main>
-    </>
+    <CatalogBrowser
+      years={years}
+      title={title}
+      year={year}
+      nextLimit={limit + PAGE_SIZE}
+      movies={movies}
+      hasMore={hasMore}
+    />
   );
 }
