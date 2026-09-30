@@ -1,5 +1,74 @@
 @import "tailwindcss";
 
-body {
-  font-family: Arial, Helvetica, sans-serif;
+:root {
+  color-scheme: dark;
+  --background: #0F0C0D;
+  --surface: #1A1517;
+  --primary: #30010F;
+  --primary-hover: #5A1024;
+  --accent: #C43B5B;
+  --border: #3B272C;
+  --foreground: #F7F3F4;
+  --muted: #B9A9AE;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-accent: var(--accent);
+  --color-border: var(--border);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+}
+
+@layer base {
+  body {
+    min-height: 100vh;
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  :where(input:not([type="checkbox"], [type="radio"], [type="range"], [type="color"], [type="file"], [type="hidden"]), select, textarea) {
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+    background-color: var(--surface);
+    color: var(--foreground);
+    padding: 0.625rem 0.875rem;
+  }
+
+  :where(input, textarea)::placeholder {
+    color: var(--muted);
+    opacity: 1;
+  }
+
+  :where(input, select, textarea):hover:not(:disabled) {
+    border-color: var(--accent);
+  }
+
+  :where(button, input[type="button"], input[type="submit"], input[type="reset"]) {
+    cursor: pointer;
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+    background-color: var(--primary);
+    color: var(--foreground);
+    padding: 0.625rem 1rem;
+    font-weight: 600;
+  }
+
+  :where(button, input[type="button"], input[type="submit"], input[type="reset"]):hover:not(:disabled) {
+    background-color: var(--primary-hover);
+  }
+
+  :where(a, button, input, select, textarea):focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  :where(button, input, select, textarea):disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
 }
