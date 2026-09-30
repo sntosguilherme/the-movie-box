@@ -7,7 +7,7 @@ export class Catalog {
   readonly tree = new SplayTree();
   readonly avl = new AVLTree();
 
-  constructor(movies: Iterable) {
+  constructor(movies: Iterable<Filme>) {
     // Constrói a AVL a partir do catálogo, conforme exigido.
     for (const movie of movies) {
       this.tree.insert(movie);
@@ -25,7 +25,7 @@ export class Catalog {
     return this.tree.openDetails(id);
   }
 
-  resolveIds(ids: Iterable): Filme[] {
+  resolveIds(ids: Iterable<number>): Filme[] {
     const movies: Filme[] = [];
     for (const id of ids) {
       const movie = this.tree.peekById(id);
