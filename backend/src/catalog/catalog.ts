@@ -42,25 +42,23 @@ export class Catalog {
    * CAMADA DE CONSULTA (Ano Exato): 
    * Encontra o ano na AVL, percorre a lista de IDs e busca os filmes completos na Splay Tree.
    */
-  searchByExactYear(year: number): Filme[] {
+  searchByExactYear(year: number, skip = 0, limit = Infinity): Filme[] {
     const ids = this.avl.getIdsByYear(year);
-    
-    // Integra a consulta ao filtro e retorna array vazio para anos sem filmes
-    if (ids.length === 0) return []; 
-    
-    return this.resolveIds(ids);
+    if (ids.length === 0) return [];
+
+    // Corta os IDs antes de resolver, para buscar na splay tree só a página pedida.
+    return this.resolveIds(ids.slice(skip, skip + limit));
   }
 
   /** 
    * CAMADA DE CONSULTA (Intervalo de Anos):
    * Encontra os anos na AVL, percorre os IDs e busca os filmes completos na Splay Tree.
    */
-  searchByYearRange(startYear: number, endYear: number): Filme[] {
+  searchByYearRange(startYear: number, endYear: number, skip = 0, limit = Infinity): Filme[] {
     const ids = this.avl.getIdsByYearRange(startYear, endYear);
-    
     if (ids.length === 0) return [];
-    
-    return this.resolveIds(ids);
+
+    return this.resolveIds(ids.slice(skip, skip + limit));
   }
 
   /**
