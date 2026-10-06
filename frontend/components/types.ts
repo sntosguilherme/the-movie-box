@@ -5,4 +5,7 @@ export type Movie = {
   posterUrl?: string | null;
   genres?: readonly string[];
   overview?: string | null;
+  popularity?: number;
+  voteAverage?: number;
+  voteCount?: number;
 };

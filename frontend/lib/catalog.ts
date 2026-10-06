@@ -16,7 +16,7 @@ export function getCatalog(): Promise<Catalog> {
 
 export const PAGE_SIZE = 24;
 
-/** Sem título, lista pelo ano da AVL ou percorre a splay tree por níveis
+/** Sem título, lista pelo ano da AVL ou percorre a splay tree
  * um item extra indica se há mais resultados. */
 export async function searchCatalog(
   title: string,
@@ -28,10 +28,10 @@ export async function searchCatalog(
   if (title.trim()) {
     found = catalog.searchByTitle(title, year ?? undefined, 0, limit + 1);
   } else if (year !== null) {
-    found = catalog.searchByExactYear(year, 0, limit + 1);
+    found = catalog.searchByExactYear(year).slice(0, limit + 1);
   } else {
     found = [];
-    for (const filme of catalog.tree.moviesLevelOrder()) {
+    for (const filme of catalog.tree.movies()) {
       if (found.length > limit) break;
       found.push(filme);
     }
@@ -50,5 +50,8 @@ export function toMovie(filme: Filme): Movie {
     posterUrl: filme.poster_url,
     genres: filme.genres,
     overview: filme.overview,
+    popularity: filme.popularity,
+    voteAverage: filme.vote_average,
+    voteCount: filme.vote_count,
   };
 }

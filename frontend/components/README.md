@@ -2,7 +2,7 @@
 
 ## Detalhes do filme
 
-`BackButton` liga ao catálogo em `/`. `MovieDetails` recebe `movie: Movie` e exibe título, ano, gêneros, sinopse e `PosterImage`. `PosterImage` recebe `title`, `posterUrl?` e `className?`, mantém proporção 2:3 e usa `/poster-placeholder.svg` quando o pôster está ausente ou falha. O tipo `Movie` também aceita `genres?: readonly string[]` e `overview?: string | null`.
+`BackButton` liga ao catálogo em `/`. `MovieDetails` recebe `movie: Movie` e exibe título, ano, gêneros, sinopse e `PosterImage`. `PosterImage` recebe `title`, `posterUrl?` e `className?`, mantém proporção 2:3 e usa `/poster-placeholder.svg` quando o pôster está ausente ou falha. O tipo `Movie` também aceita `genres?: readonly string[]`, `overview?: string | null`, `popularity?: number`, `voteAverage?: number` e `voteCount?: number`.
 
 Para testar, execute `npm run dev` em `frontend/` e abra `/exemplo`. A seção "Prévia dos detalhes" oferece um filme com pôster e outro sem pôster.
 
@@ -18,7 +18,7 @@ Os componentes usam a paleta de `app/globals.css`. Importe cada componente pelo 
 | `MovieCard` | `movie: Movie` | Pôster, título, ano e link para `/filmes/[id]`. Pôster ausente ou com erro usa a imagem de cinema em `public/poster-placeholder.svg`, com texto alternativo acessível. |
 | `MovieGrid` | `movies: readonly Movie[]` | Grade responsiva, preservando a ordem recebida, com mensagem para resultados vazios. |
 
-O tipo `Movie`, exportado de `types.ts`, contém `id: string | number`, `title: string`, `year: number` e `posterUrl?: string | null`. Adapte os registros do dataset para esse contrato na camada que consulta as estruturas. Os pôsteres usam `next/image` com `unoptimized`, permitindo URLs recebidas por props sem configurar um serviço de otimização.
+O tipo `Movie`, exportado de `types.ts`, contém `id: string | number`, `title: string`, `year: number` e `posterUrl?: string | null`, além dos campos opcionais de detalhes, relevância e nota citados acima. Adapte os registros do dataset para esse contrato na camada que consulta as estruturas; `toMovie` em `lib/catalog.ts` converte `popularity`, `vote_average` e `vote_count` para `popularity`, `voteAverage` e `voteCount`. Os pôsteres usam `next/image` com `unoptimized`, permitindo URLs recebidas por props sem configurar um serviço de otimização.
 
 Busca e seleção de ano são controladas pelo componente pai, que deve atualizar as props após cada evento. A grade preserva a ordem dos filmes recebidos e não faz consultas às estruturas. A camada de consulta combina a busca por título na splay tree com os IDs do ano selecionado na AVL. O componente que mantém o estado dos filtros deve ser um Client Component (`"use client"`).
 

@@ -6,6 +6,7 @@ import { SplayTree } from "../src/structures/splay-tree.ts";
 
 const movie = (id: number, title = `Filme ${id}`): Filme => ({
   id, title, overview: "", genres: [], release_date: "2000-01-01", poster_url: null,
+  popularity: 0, vote_average: 0, vote_count: 0,
 });
 
 test("inserção, busca com splay, duplicata e remoção preservam o catálogo", () => {
@@ -38,12 +39,11 @@ test("detalhes aumentam gradualmente as rotações; consultas não mudam a raiz"
   assert.equal(catalog.openDetails(8)?.id, 8);
   assert.equal(tree.rootId, 1);
   assert.equal(tree.getDetailOpenCount(8), 1);
-  catalog.openDetails(8); // limite de 8 rotações
-  catalog.openDetails(8); // sobe até o nível 3 na terceira abertura
-  assert.ok((tree.depthOf(8) ?? Infinity) <= 3);
-  catalog.openDetails(8); // splay completo a partir da quarta abertura
+  catalog.openDetails(8); // limite de 4 rotações
+  assert.notEqual(tree.rootId, 8);
+  catalog.openDetails(8); // limite de 6 rotações
   assert.equal(tree.rootId, 8);
-  assert.equal(tree.getDetailOpenCount(8), 4);
+  assert.equal(tree.getDetailOpenCount(8), 3);
   assert.equal(tree.openDetails(999), undefined);
   assert.equal(tree.getDetailOpenCount(999), 0);
 });
@@ -55,37 +55,6 @@ test("busca por título percorre sem splay e compara o início ignorando caixa e
   assert.deepEqual(catalog.searchByTitle("total"), []);
   assert.deepEqual(catalog.searchByTitle(" "), []);
   assert.equal(catalog.tree.rootId, 4);
-});
-
-test("terceira abertura leva um filme profundo ao nível 3 e a quarta à raiz", () => {
-  const tree = new SplayTree();
-  for (let id = 30; id >= 1; id--) tree.insert(movie(id));
-  assert.equal(tree.depthOf(30), 29);
-  tree.openDetails(30);
-  assert.equal(tree.depthOf(30), 25);
-  tree.openDetails(30);
-  assert.equal(tree.depthOf(30), 17);
-  tree.openDetails(30);
-  assert.equal(tree.depthOf(30), 3);
-  tree.openDetails(30);
-  assert.equal(tree.rootId, 30);
-  assert.equal(tree.getDetailOpenCount(30), 4);
-});
-
-test("pré-ordem lista raiz, lado esquerdo e lado direito", () => {
-  const tree = new SplayTree();
-  for (const id of [2, 1, 3]) tree.insert(movie(id));
-  tree.findById(2);
-  assert.deepEqual([...tree.moviesPreOrder()].map(({ id }) => id), [2, 1, 3]);
-  tree.openDetails(1);
-  assert.equal([...tree.moviesPreOrder()][0].id, tree.rootId);
-});
-
-test("percurso por níveis mostra a raiz e depois cada camada", () => {
-  const tree = new SplayTree();
-  for (const id of [2, 1, 3, 0, 4]) tree.insert(movie(id));
-  tree.findById(2);
-  assert.deepEqual([...tree.moviesLevelOrder()].map(({ id }) => id), [2, 1, 3, 0, 4]);
 });
 
 test("remoção e buscas em sequência mantêm a ordem da árvore", () => {

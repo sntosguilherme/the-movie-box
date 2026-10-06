@@ -11,6 +11,9 @@ const mockMovie = (id: number, title: string, year: string): Filme => ({
   genres: ["Ação"],
   release_date: `${year}-05-10`, // Simulando o formato de data real
   poster_url: null,
+  popularity: 1,
+  vote_average: 7,
+  vote_count: 10,
 });
 
 test("Integração - Busca por ano exato retorna filmes completos da Splay Tree", () => {

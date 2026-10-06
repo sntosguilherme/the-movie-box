@@ -4,6 +4,12 @@ O catálogo usa três estruturas: uma Splay Tree para os filmes, uma AVL para
 indexar os anos de lançamento e uma lista encadeada para guardar os IDs dos
 filmes de cada ano.
 
+O tipo `Filme` (`src/models/filme.ts`) segue o formato de `data/movies.json`
+descrito no [README da raiz](../README.md#dataset): além dos dados de exibição,
+cada filme traz `popularity` (relevância), `vote_average` (nota de 0 a 10) e
+`vote_count`. As estruturas não dependem desses campos: a Splay Tree continua
+ordenada pelo ID e a AVL pelo ano.
+
 ## Splay Tree adaptada
 
 A Splay Tree adaptada guarda cada objeto `Filme` uma única vez, ordenado pelo
