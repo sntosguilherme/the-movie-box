@@ -1,5 +1,7 @@
 import type { Filme } from "../models/filme.ts";
 
+export const SPLAY_PAGE_SIZE = 16;
+
 class Node {
   left: Node | null = null;
   right: Node | null = null;
@@ -12,6 +14,8 @@ class Node {
 export class SplayTree {
   private root: Node | null = null;
   private count = 0;
+  private browsingOrder: Node[] | null = null;
+  private readonly browsingPositions = new Map<number, number>();
 
   get size(): number {
     return this.count;
@@ -30,6 +34,20 @@ export class SplayTree {
     return depth;
   }
 
+  /** Insere por relevância crescente para deixar o mais popular na raiz. */
+  insertInitial(movies: Iterable<Filme>): void {
+    if (this.count !== 0) throw new Error("A carga inicial exige uma árvore vazia.");
+    const ordered = Array.from(movies).sort(
+      (a, b) => a.popularity - b.popularity || b.id - a.id,
+    );
+    const inserted: Node[] = [];
+    for (const movie of ordered) {
+      if (this.insert(movie)) inserted.push(this.root!);
+    }
+    this.browsingOrder = inserted.reverse();
+    this.reindexBrowsingOrder(0);
+  }
+
   insert(movie: Filme): boolean {
     if (!Number.isSafeInteger(movie.id)) {
       throw new TypeError("O ID do filme deve ser um inteiro seguro.");
@@ -38,6 +56,8 @@ export class SplayTree {
     if (!this.root) {
       this.root = new Node(movie);
       this.count++;
+      this.browsingOrder = null;
+      this.browsingPositions.clear();
       return true;
     }
 
@@ -53,6 +73,8 @@ export class SplayTree {
         current[side] = node;
         this.count++;
         this.splay(node);
+        this.browsingOrder = null;
+        this.browsingPositions.clear();
         return true;
       }
     }
@@ -71,16 +93,37 @@ export class SplayTree {
     return node.movie;
   }
 
-  /** Aproxima o filme do nível desejado, ou faz splay completo para a raiz. */
-  openDetails(id: number, targetDepth?: number): Filme | undefined {
+  /** Promove o filme na árvore e na ordem exibida, em faixas de 16. */
+  openDetails(id: number): Filme | undefined {
     const node = this.locate(id);
     if (!node) return undefined;
+    this.ensureBrowsingOrder();
+    const currentIndex = this.browsingPositions.get(id)!;
+    const targetIndex = currentIndex < SPLAY_PAGE_SIZE
+      ? 0
+      : node.detailOpens === 0 ? SPLAY_PAGE_SIZE : node.detailOpens === 1 ? 1 : 0;
+    const targetDepth = targetIndex === SPLAY_PAGE_SIZE ? 4 : targetIndex === 1 ? 3 : 0;
     node.detailOpens++;
 
-    const depth = targetDepth ?? (node.detailOpens === 1 ? 4 : node.detailOpens === 2 ? 3 : 0);
-    if (depth === 0) this.splay(node);
-    else this.splayToDepth(node, depth);
+    if (targetDepth === 0) this.splay(node);
+    else this.splayToDepth(node, targetDepth);
+    if (currentIndex !== targetIndex) {
+      this.browsingOrder!.splice(currentIndex, 1);
+      this.browsingOrder!.splice(targetIndex, 0, node);
+      this.reindexBrowsingOrder(Math.min(currentIndex, targetIndex));
+    }
     return node.movie;
+  }
+
+  /** Posição zero-based na ordem exibida, sem rotações. */
+  browsingPositionOf(id: number): number | undefined {
+    this.ensureBrowsingOrder();
+    return this.browsingPositions.get(id);
+  }
+
+  *moviesForBrowsing(): IterableIterator<Filme> {
+    this.ensureBrowsingOrder();
+    for (const node of this.browsingOrder!) yield node.movie;
   }
 
   getDetailOpenCount(id: number): number {
@@ -90,6 +133,7 @@ export class SplayTree {
   remove(id: number): Filme | undefined {
     const node = this.locate(id);
     if (!node) return undefined;
+    const browsingIndex = this.browsingPositions.get(id);
     this.splay(node);
 
     const left = node.left;
@@ -110,7 +154,38 @@ export class SplayTree {
     }
 
     this.count--;
+    if (browsingIndex !== undefined) {
+      this.browsingOrder!.splice(browsingIndex, 1);
+      this.browsingPositions.delete(id);
+      this.reindexBrowsingOrder(browsingIndex);
+    }
     return node.movie;
+  }
+
+  private ensureBrowsingOrder(): void {
+    if (this.browsingOrder !== null) return;
+    const nodes: Node[] = [];
+    const stack: Node[] = [];
+    let current = this.root;
+    while (current || stack.length) {
+      while (current) {
+        stack.push(current);
+        current = current.left;
+      }
+      current = stack.pop()!;
+      nodes.push(current);
+      current = current.right;
+    }
+    nodes.sort((a, b) => b.movie.popularity - a.movie.popularity || a.movie.id - b.movie.id);
+    this.browsingOrder = nodes;
+    this.reindexBrowsingOrder(0);
+  }
+
+  private reindexBrowsingOrder(start: number): void {
+    if (this.browsingOrder === null) return;
+    for (let index = start; index < this.browsingOrder.length; index++) {
+      this.browsingPositions.set(this.browsingOrder[index].movie.id, index);
+    }
   }
 
   /** Percurso em ordem crescente de ID, sem splay. */

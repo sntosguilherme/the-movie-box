@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { CATALOG_PAGE_SIZE, Catalog } from "../src/catalog/catalog.ts";
+import { Catalog } from "../src/catalog/catalog.ts";
+import { SPLAY_PAGE_SIZE } from "../src/structures/splay-tree.ts";
 import type { Filme } from "../src/models/filme.ts";
 
 // Helper para criar filmes de teste facilmente
@@ -132,7 +133,7 @@ test("aberturas promovem o filme da terceira faixa para a segunda, primeira e po
   const catalog = new Catalog(movies);
   const positionOf = (id: number) => [...catalog.moviesForBrowsing()].findIndex((movie) => movie.id === id);
 
-  assert.equal(CATALOG_PAGE_SIZE, 16);
+  assert.equal(SPLAY_PAGE_SIZE, 16);
   assert.equal(positionOf(8), 40);
   catalog.openDetails(8);
   assert.equal(positionOf(8), 16);

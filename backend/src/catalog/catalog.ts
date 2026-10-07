@@ -3,8 +3,6 @@ import type { Filme } from "../models/filme.ts";
 import { SplayTree } from "../structures/splay-tree.ts";
 import { AVLTree } from "../structures/avl-tree.ts";
 
-export const CATALOG_PAGE_SIZE = 16;
-
 function normalizeTitle(value: string): string {
   return value.normalize("NFD").replace(/\p{M}/gu, "").trim().toLocaleLowerCase("pt-BR");
 }
@@ -12,21 +10,9 @@ function normalizeTitle(value: string): string {
 export class Catalog {
   readonly tree = new SplayTree();
   readonly avl = new AVLTree();
-  private readonly browsingOrder: Filme[];
-  private readonly browsingPositions = new Map<number, number>();
-
   constructor(movies: Iterable<Filme>) {
     const inputMovies = Array.from(movies);
-    const moviesByPopularity = [...inputMovies].sort(
-      (a, b) => a.popularity - b.popularity || b.id - a.id,
-    );
-
-    const inserted: Filme[] = [];
-    for (const movie of moviesByPopularity) {
-      if (this.tree.insert(movie)) inserted.push(movie);
-    }
-    this.browsingOrder = inserted.reverse();
-    this.browsingOrder.forEach((movie, index) => this.browsingPositions.set(movie.id, index));
+    this.tree.insertInitial(inputMovies);
 
     // Mantém a ordem original dos IDs dentro de cada ano na AVL.
     for (const movie of inputMovies) {
@@ -40,35 +26,17 @@ export class Catalog {
   }
 
   openDetails(id: number): Filme | undefined {
-    const currentIndex = this.browsingPositions.get(id);
-    if (currentIndex === undefined) return undefined;
-
-    const opens = this.tree.getDetailOpenCount(id);
-    const targetIndex = currentIndex < CATALOG_PAGE_SIZE
-      ? 0
-      : opens === 0 ? CATALOG_PAGE_SIZE : opens === 1 ? 1 : 0;
-    const targetDepth = targetIndex === CATALOG_PAGE_SIZE ? 4 : targetIndex === 1 ? 3 : 0;
-    const movie = this.tree.openDetails(id, targetDepth);
-    if (!movie) return undefined;
-
-    if (currentIndex !== targetIndex) {
-      this.browsingOrder.splice(currentIndex, 1);
-      this.browsingOrder.splice(targetIndex, 0, movie);
-      for (let index = Math.min(currentIndex, targetIndex); index <= Math.max(currentIndex, targetIndex); index++) {
-        this.browsingPositions.set(this.browsingOrder[index].id, index);
-      }
-    }
-    return movie;
+    return this.tree.openDetails(id);
   }
 
   /** Ordem inicial por relevância, com promoções em faixas de 16 após aberturas. */
   *moviesForBrowsing(): IterableIterator<Filme> {
-    yield* this.browsingOrder;
+    yield* this.tree.moviesForBrowsing();
   }
 
   private rankMovies(movies: Iterable<Filme>): Filme[] {
     return Array.from(movies).sort(
-      (a, b) => this.browsingPositions.get(a.id)! - this.browsingPositions.get(b.id)!,
+      (a, b) => this.tree.browsingPositionOf(a.id)! - this.tree.browsingPositionOf(b.id)!,
     );
   }
 

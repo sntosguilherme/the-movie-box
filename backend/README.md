@@ -7,7 +7,7 @@ filmes de cada ano.
 O tipo `Filme` (`src/models/filme.ts`) segue o formato de `data/movies.json`
 descrito no [README da raiz](../README.md#dataset): além dos dados de exibição,
 cada filme traz `popularity` (relevância), `vote_average` (nota de 0 a 10) e
-`vote_count`. O catálogo insere os filmes na Splay Tree por `popularity`
+`vote_count`. A Splay Tree insere os filmes por `popularity`
 crescente (com desempate por ID decrescente), sem alterar a ordem da entrada.
 Assim, o mais popular é inserido por último e começa na raiz. A listagem inicial
 segue `popularity` decrescente; as aberturas promovem o filme em faixas de 16.
@@ -18,23 +18,26 @@ A chave da Splay Tree continua sendo o ID, e a AVL permanece ordenada pelo ano.
 A Splay Tree adaptada guarda cada objeto `Filme` uma única vez, ordenado pelo
 `id`. A busca explícita por ID usa o splay tradicional e move o nó até a raiz.
 Já a abertura da página de detalhes usa splay parcial para aproximar o filme:
-se ele estiver após os primeiros 32, vai ao início da segunda faixa de 16;
+se ele estiver após os primeiros 16, vai ao início da segunda faixa de 16;
 na próxima abertura, ao início da primeira faixa; na terceira, à primeira
 posição. Um filme que já esteja na primeira faixa vai direto à primeira posição.
 As rotações `zig`, `zig-zig` e `zig-zag` preservam a propriedade de
 árvore binária de busca em todos os casos.
 
 O custo amortizado clássico de `O(log n)` aplica-se ao splay completo. As
-aberturas com splay parcial são uma regra específica deste catálogo. A posição
-exata na listagem é mantida pelo catálogo, pois a profundidade de um nó na
-árvore ordenada por ID não determina sua posição entre os filmes por relevância.
+aberturas com splay parcial são uma regra específica desta Splay Tree. Ela
+mantém internamente um índice de nós na ordem exibida, pois a profundidade
+de um nó na árvore ordenada por ID não determina sua posição entre os filmes
+por relevância. O catálogo apenas delega a promoção e lê essa ordem.
 
 | Método | Descrição |
 | --- | --- |
 | `insert(movie)` | Insere um filme pelo ID; retorna `false` se o ID já existir. |
+| `insertInitial(movies)` | Insere os filmes por popularidade crescente e estabelece a ordem inicial de exibição. |
 | `findById(id)` | Encontra um filme e faz splay completo até a raiz. |
 | `peekById(id)` | Encontra um filme sem alterar a árvore. |
 | `openDetails(id)` | Registra a abertura dos detalhes e aproxima o nó até os níveis 4 e 3 nas duas primeiras promoções; a etapa final faz splay completo. |
+| `browsingPositionOf(id)` / `moviesForBrowsing()` | Consultam o índice de exibição mantido pela própria árvore. |
 | `getDetailOpenCount(id)` | Retorna quantas vezes os detalhes do filme foram abertos. |
 | `remove(id)` | Remove um filme da árvore e o retorna. |
 | `depthOf(id)` | Retorna a profundidade atual de um filme. |

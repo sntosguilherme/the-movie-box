@@ -1,7 +1,7 @@
 import { fileURLToPath } from "node:url";
 import { createInterface } from "node:readline";
 import { loadCatalog } from "./catalog/load-catalog.ts";
-import { CATALOG_PAGE_SIZE } from "./catalog/catalog.ts";
+import { SPLAY_PAGE_SIZE } from "./structures/splay-tree.ts";
 import type { Filme } from "./models/filme.ts";
 
 const dataPath = fileURLToPath(new URL("../../../data/movies.json", import.meta.url));
@@ -50,7 +50,7 @@ function access(id: number, mode: "abrir" | "buscar"): void {
   if (mode === "abrir") {
     const opens = catalog.tree.getDetailOpenCount(id);
     const position = [...catalog.moviesForBrowsing()].findIndex((item) => item.id === id) + 1;
-    console.log(`Abertura ${opens}; posição no catálogo: ${position}; faixa: ${Math.ceil(position / CATALOG_PAGE_SIZE)}.`);
+    console.log(`Abertura ${opens}; posição no catálogo: ${position}; faixa: ${Math.ceil(position / SPLAY_PAGE_SIZE)}.`);
   }
   console.log(`Profundidade: ${depthBefore} → ${catalog.tree.depthOf(id)} | Raiz: ${rootBefore} → ${catalog.tree.rootId}`);
 }

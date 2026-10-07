@@ -2,11 +2,30 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import { Catalog } from "../src/catalog/catalog.ts";
 import type { Filme } from "../src/models/filme.ts";
-import { SplayTree } from "../src/structures/splay-tree.ts";
+import { SPLAY_PAGE_SIZE, SplayTree } from "../src/structures/splay-tree.ts";
 
 const movie = (id: number, title = `Filme ${id}`): Filme => ({
   id, title, overview: "", genres: [], release_date: "2000-01-01", poster_url: null,
   popularity: 0, vote_average: 0, vote_count: 0,
+});
+
+test("a própria Splay Tree promove em faixas de 16 e mantém a ordem após remoção", () => {
+  const tree = new SplayTree();
+  tree.insertInitial(Array.from({ length: 48 }, (_, index) => ({
+    ...movie(index + 1), popularity: 48 - index,
+  })));
+  assert.equal(SPLAY_PAGE_SIZE, 16);
+  assert.equal(tree.browsingPositionOf(40), 39);
+  tree.openDetails(40);
+  assert.equal(tree.browsingPositionOf(40), 16);
+  tree.openDetails(40);
+  assert.equal(tree.browsingPositionOf(40), 1);
+  tree.openDetails(40);
+  assert.equal(tree.browsingPositionOf(40), 0);
+  assert.equal(tree.getDetailOpenCount(40), 3);
+  assert.equal(tree.remove(40)?.id, 40);
+  assert.equal(tree.browsingPositionOf(40), undefined);
+  assert.equal([...tree.moviesForBrowsing()].length, 47);
 });
 
 test("inserção, busca com splay, duplicata e remoção preservam o catálogo", () => {

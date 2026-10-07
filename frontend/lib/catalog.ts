@@ -1,5 +1,6 @@
 import path from "node:path";
-import { CATALOG_PAGE_SIZE, type Catalog } from "../../backend/src/catalog/catalog";
+import type { Catalog } from "../../backend/src/catalog/catalog";
+import { SPLAY_PAGE_SIZE } from "../../backend/src/structures/splay-tree";
 import { loadCatalog } from "../../backend/src/catalog/load-catalog";
 import type { Filme } from "../../backend/src/models/filme";
 import type { Movie } from "@/components/types";
@@ -14,7 +15,7 @@ export function getCatalog(): Promise<Catalog> {
   return catalog;
 }
 
-export const PAGE_SIZE = CATALOG_PAGE_SIZE;
+export const PAGE_SIZE = SPLAY_PAGE_SIZE;
 
 /** Retorna os primeiros `limit` filmes e um item extra para "Carregar mais". */
 export async function searchCatalog(
