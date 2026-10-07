@@ -13,6 +13,7 @@ export default function MovieCard({ movie }: MovieCardProps) {
     <article className="h-full">
       <Link
         href={`/filmes/${encodeURIComponent(String(movie.id))}`}
+        prefetch={false}
         className="group block h-full overflow-hidden rounded-lg border border-border bg-surface hover:border-accent"
       >
         <PosterImage title={movie.title} posterUrl={movie.posterUrl} />
