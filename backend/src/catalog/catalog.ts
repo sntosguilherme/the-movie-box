@@ -29,15 +29,18 @@ export class Catalog {
     return this.tree.openDetails(id);
   }
 
-  /** Ordem inicial por relevância, com promoções em faixas de 16 após aberturas. */
+  /** Ordem estrutural atual da Splay Tree, sem ranking paralelo. */
   *moviesForBrowsing(): IterableIterator<Filme> {
     yield* this.tree.moviesForBrowsing();
   }
 
   private rankMovies(movies: Iterable<Filme>): Filme[] {
-    return Array.from(movies).sort(
-      (a, b) => this.tree.browsingPositionOf(a.id)! - this.tree.browsingPositionOf(b.id)!,
-    );
+    const ids = new Set(Array.from(movies, (movie) => movie.id));
+    const ranked: Filme[] = [];
+    for (const movie of this.tree.moviesForBrowsing()) {
+      if (ids.has(movie.id)) ranked.push(movie);
+    }
+    return ranked;
   }
 
   resolveIds(ids: Iterable<number>, skip = 0, limit = Infinity): Filme[] {

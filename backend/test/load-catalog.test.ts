@@ -12,7 +12,7 @@ const mockMovies: Filme[] = [
   { id: 105, title: "O Retorno do Rei", overview: "O fim da jornada.", genres: ["Fantasia"], release_date: "2003-12-17", poster_url: null, popularity: 1, vote_average: 7, vote_count: 10 },
 ];
 
-test("inserção inicial deixa o mais popular na raiz e mantém o ranking sem alterar a entrada", () => {
+test("inserção inicial deixa o mais popular na raiz sem alterar a entrada", () => {
   const input = Object.freeze([
     { ...mockMovies[0], id: 20, popularity: 5 },
     { ...mockMovies[1], id: 30, popularity: 1 },
@@ -25,7 +25,7 @@ test("inserção inicial deixa o mais popular na raiz e mantém o ranking sem al
   // A inserção faz splay do último nó; o mais popular termina na raiz.
   assert.equal(catalog.tree.rootId, 40);
   assert.equal(catalog.tree.size, 4);
-  assert.deepEqual([...catalog.moviesForBrowsing()].map((movie) => movie.id), [40, 10, 20, 30]);
+  assert.deepEqual([...catalog.moviesForBrowsing()].map((movie) => movie.id), [40, 10, 30, 20]);
   assert.deepEqual(input.map((movie) => movie.id), originalIds);
   assert.deepEqual([...catalog.avl.getIdsByYear(2003)], [10]);
   for (const movie of input) assert.equal(catalog.tree.peekById(movie.id), movie);
@@ -35,7 +35,8 @@ test("inserção inicial deixa o mais popular na raiz e mantém o ranking sem al
   assert.deepEqual([...tied.moviesForBrowsing()].map((movie) => movie.id), [10, 20]);
 
   catalog.openDetails(30);
-  assert.deepEqual([...catalog.moviesForBrowsing()].map((movie) => movie.id), [30, 40, 10, 20]);
+  assert.equal(catalog.tree.getDetailOpenCount(30), 1);
+  assert.equal([...catalog.moviesForBrowsing()][0].id, catalog.tree.rootId);
 });
 
 test("Requisito: Inserir cada objeto Filme uma única vez na Splay Tree", () => {

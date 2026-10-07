@@ -2,24 +2,25 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import { Catalog } from "../src/catalog/catalog.ts";
 import type { Filme } from "../src/models/filme.ts";
-import { SPLAY_PAGE_SIZE, SplayTree } from "../src/structures/splay-tree.ts";
+import { SplayTree } from "../src/structures/splay-tree.ts";
 
 const movie = (id: number, title = `Filme ${id}`): Filme => ({
   id, title, overview: "", genres: [], release_date: "2000-01-01", poster_url: null,
   popularity: 0, vote_average: 0, vote_count: 0,
 });
 
-test("a própria Splay Tree promove em faixas de 16 e mantém a ordem após remoção", () => {
+test("a listagem acompanha as rotações da Splay Tree sem índice de exibição", () => {
   const tree = new SplayTree();
   tree.insertInitial(Array.from({ length: 48 }, (_, index) => ({
     ...movie(index + 1), popularity: 48 - index,
   })));
-  assert.equal(SPLAY_PAGE_SIZE, 16);
   assert.equal(tree.browsingPositionOf(40), 39);
   tree.openDetails(40);
-  assert.equal(tree.browsingPositionOf(40), 16);
+  assert.equal(tree.depthOf(40), 4);
+  assert.equal(tree.browsingPositionOf(40), 4);
   tree.openDetails(40);
-  assert.equal(tree.browsingPositionOf(40), 1);
+  assert.equal(tree.depthOf(40), 3);
+  assert.equal(tree.browsingPositionOf(40), 3);
   tree.openDetails(40);
   assert.equal(tree.browsingPositionOf(40), 0);
   assert.equal(tree.getDetailOpenCount(40), 3);

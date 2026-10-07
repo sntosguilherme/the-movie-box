@@ -1,7 +1,6 @@
 import { fileURLToPath } from "node:url";
 import { createInterface } from "node:readline";
 import { loadCatalog } from "./catalog/load-catalog.ts";
-import { SPLAY_PAGE_SIZE } from "./structures/splay-tree.ts";
 import type { Filme } from "./models/filme.ts";
 
 const dataPath = fileURLToPath(new URL("../../../data/movies.json", import.meta.url));
@@ -29,7 +28,7 @@ function help(): void {
   lista [n]       Lista até n filmes por níveis (padrão: 10), sem splay
   titulo <texto>  Busca por título, sem splay
   consultar <id>  Consulta por ID, sem splay
-  abrir <id>      Abre detalhes; promove o filme entre faixas de 16
+  abrir <id>      Abre detalhes; splay parcial duas vezes, depois completo
   buscar <id>     Busca por ID e faz splay completo
   remover <id>    Remove um filme da árvore
   raiz            Mostra a raiz atual
@@ -49,8 +48,7 @@ function access(id: number, mode: "abrir" | "buscar"): void {
   console.log(label(movie));
   if (mode === "abrir") {
     const opens = catalog.tree.getDetailOpenCount(id);
-    const position = [...catalog.moviesForBrowsing()].findIndex((item) => item.id === id) + 1;
-    console.log(`Abertura ${opens}; posição no catálogo: ${position}; faixa: ${Math.ceil(position / SPLAY_PAGE_SIZE)}.`);
+    console.log(`Abertura ${opens}; splay ${opens < 3 ? "parcial" : "completo"}.`);
   }
   console.log(`Profundidade: ${depthBefore} → ${catalog.tree.depthOf(id)} | Raiz: ${rootBefore} → ${catalog.tree.rootId}`);
 }
