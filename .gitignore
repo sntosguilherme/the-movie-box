@@ -13,3 +13,6 @@ __pycache__/
 docs/
 pre-processing/data-processing/*
 pre-processing/processed/*
+
+# CSVs brutos do Kaggle (credits.csv tem 190 MB)
+data/*.csv
