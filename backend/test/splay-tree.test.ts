@@ -30,29 +30,26 @@ test("inserção, busca com splay, duplicata e remoção preservam o catálogo",
 });
 
 test("detalhes aumentam gradualmente as rotações; consultas não mudam a raiz", () => {
-  const catalog = new Catalog(Array.from({ length: 16 }, (_, index) => {
-    const id = 16 - index;
-    return { ...movie(id), popularity: 17 - id };
+  const catalog = new Catalog(Array.from({ length: 48 }, (_, index) => {
+    const id = 48 - index;
+    return { ...movie(id), popularity: 49 - id };
   }));
   const tree = catalog.tree;
   assert.equal(tree.rootId, 1);
-  const initialDepth = tree.depthOf(16)!;
-  assert.ok(initialDepth > 3);
-  assert.equal(tree.peekById(16)?.id, 16);
-  assert.deepEqual(catalog.resolveIds([16, 3, 999]).map(({ id }) => id), [16, 3]);
+  const initialDepth = tree.depthOf(48)!;
+  assert.ok(initialDepth > 4);
+  assert.equal(tree.peekById(48)?.id, 48);
+  assert.deepEqual(catalog.resolveIds([48, 3, 999]).map(({ id }) => id), [48, 3]);
   assert.equal(tree.rootId, 1);
-  assert.equal(catalog.openDetails(16)?.id, 16);
-  const firstDepth = tree.depthOf(16)!;
-  assert.ok(firstDepth < initialDepth && firstDepth > 0);
-  assert.equal(tree.getDetailOpenCount(16), 1);
-  catalog.openDetails(16);
-  assert.ok(tree.depthOf(16)! < firstDepth);
-  catalog.openDetails(16);
-  assert.ok(tree.depthOf(16)! <= 3);
-  assert.notEqual(tree.rootId, 16);
-  catalog.openDetails(16);
-  assert.equal(tree.rootId, 16);
-  assert.equal(tree.getDetailOpenCount(16), 4);
+  assert.equal(catalog.openDetails(48)?.id, 48);
+  assert.equal(tree.depthOf(48), 4);
+  assert.equal(tree.getDetailOpenCount(48), 1);
+  catalog.openDetails(48);
+  assert.equal(tree.depthOf(48), 3);
+  assert.notEqual(tree.rootId, 48);
+  catalog.openDetails(48);
+  assert.equal(tree.rootId, 48);
+  assert.equal(tree.getDetailOpenCount(48), 3);
   assert.equal(tree.openDetails(999), undefined);
   assert.equal(tree.getDetailOpenCount(999), 0);
 });

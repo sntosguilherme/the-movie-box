@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { Catalog } from "../src/catalog/catalog.ts";
+import { CATALOG_PAGE_SIZE, Catalog } from "../src/catalog/catalog.ts";
 import type { Filme } from "../src/models/filme.ts";
 
 // Helper para criar filmes de teste facilmente
@@ -119,7 +119,32 @@ test("buscas por ano e título priorizam relevância e a raiz atual", () => {
 
   assert.deepEqual(catalog.searchByExactYear(2000).map((movie) => movie.id), [2, 3, 1]);
   assert.deepEqual(catalog.searchByTitle("aventura", 2000, 0, 2).map((movie) => movie.id), [2, 3]);
-  catalog.tree.findById(1);
+  catalog.openDetails(1);
   assert.deepEqual(catalog.searchByExactYear(2000, 0, 2).map((movie) => movie.id), [1, 2]);
   assert.deepEqual(catalog.searchByTitle("aventura", undefined, 0, 2).map((movie) => movie.id), [1, 2]);
+});
+
+test("aberturas promovem o filme da terceira faixa para a segunda, primeira e posição inicial", () => {
+  const movies = Array.from({ length: 48 }, (_, index) => ({
+    ...mockMovie(index + 1, `Filme ${index + 1}`, "2000"),
+    popularity: index + 1,
+  }));
+  const catalog = new Catalog(movies);
+  const positionOf = (id: number) => [...catalog.moviesForBrowsing()].findIndex((movie) => movie.id === id);
+
+  assert.equal(CATALOG_PAGE_SIZE, 16);
+  assert.equal(positionOf(8), 40);
+  catalog.openDetails(8);
+  assert.equal(positionOf(8), 16);
+  catalog.openDetails(8);
+  assert.equal(positionOf(8), 1);
+  catalog.openDetails(8);
+  assert.equal(positionOf(8), 0);
+  assert.equal(catalog.tree.rootId, 8);
+  assert.deepEqual(catalog.searchByExactYear(2000, 0, 2).map((movie) => movie.id), [8, 48]);
+
+  const firstPageCatalog = new Catalog(movies);
+  firstPageCatalog.openDetails(47);
+  assert.equal([...firstPageCatalog.moviesForBrowsing()][0].id, 47);
+  assert.equal(firstPageCatalog.tree.rootId, 47);
 });

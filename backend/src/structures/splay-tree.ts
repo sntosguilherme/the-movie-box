@@ -71,17 +71,15 @@ export class SplayTree {
     return node.movie;
   }
 
-  /** A abertura dos detalhes é o acesso adaptativo que reorganiza a árvore. */
-  openDetails(id: number): Filme | undefined {
+  /** Aproxima o filme do nível desejado, ou faz splay completo para a raiz. */
+  openDetails(id: number, targetDepth?: number): Filme | undefined {
     const node = this.locate(id);
     if (!node) return undefined;
     node.detailOpens++;
 
-    // Nas duas primeiras aberturas, o limite é 2^(i + 1) rotações. Na terceira,
-    // o filme sobe até o nível 3; na quarta, conclui o splay na raiz.
-    if (node.detailOpens < 3) this.splay(node, 2 ** (node.detailOpens + 1));
-    else if (node.detailOpens === 3) this.splayToDepth(node, 3);
-    else this.splay(node);
+    const depth = targetDepth ?? (node.detailOpens === 1 ? 4 : node.detailOpens === 2 ? 3 : 0);
+    if (depth === 0) this.splay(node);
+    else this.splayToDepth(node, depth);
     return node.movie;
   }
 

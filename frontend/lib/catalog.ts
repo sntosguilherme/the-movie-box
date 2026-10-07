@@ -1,5 +1,5 @@
 import path from "node:path";
-import type { Catalog } from "../../backend/src/catalog/catalog";
+import { CATALOG_PAGE_SIZE, type Catalog } from "../../backend/src/catalog/catalog";
 import { loadCatalog } from "../../backend/src/catalog/load-catalog";
 import type { Filme } from "../../backend/src/models/filme";
 import type { Movie } from "@/components/types";
@@ -14,10 +14,9 @@ export function getCatalog(): Promise<Catalog> {
   return catalog;
 }
 
-export const PAGE_SIZE = 24;
+export const PAGE_SIZE = CATALOG_PAGE_SIZE;
 
-/** Sem título, lista pelo ano da AVL ou pela relevância com a raiz atual primeiro;
- * um item extra indica se há mais resultados. */
+/** Retorna os primeiros `limit` filmes e um item extra para "Carregar mais". */
 export async function searchCatalog(
   title: string,
   year: number | null,
@@ -28,7 +27,7 @@ export async function searchCatalog(
   if (title.trim()) {
     found = catalog.searchByTitle(title, year ?? undefined, 0, limit + 1);
   } else if (year !== null) {
-    found = catalog.searchByExactYear(year).slice(0, limit + 1);
+    found = catalog.searchByExactYear(year, 0, limit + 1);
   } else {
     found = [];
     for (const filme of catalog.moviesForBrowsing()) {

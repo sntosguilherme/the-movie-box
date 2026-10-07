@@ -1,6 +1,7 @@
 import { fileURLToPath } from "node:url";
 import { createInterface } from "node:readline";
 import { loadCatalog } from "./catalog/load-catalog.ts";
+import { CATALOG_PAGE_SIZE } from "./catalog/catalog.ts";
 import type { Filme } from "./models/filme.ts";
 
 const dataPath = fileURLToPath(new URL("../../../data/movies.json", import.meta.url));
@@ -28,7 +29,7 @@ function help(): void {
   lista [n]       Lista até n filmes por níveis (padrão: 10), sem splay
   titulo <texto>  Busca por título, sem splay
   consultar <id>  Consulta por ID, sem splay
-  abrir <id>      Abre detalhes; splay parcial nas duas primeiras aberturas
+  abrir <id>      Abre detalhes; promove o filme entre faixas de 16
   buscar <id>     Busca por ID e faz splay completo
   remover <id>    Remove um filme da árvore
   raiz            Mostra a raiz atual
@@ -48,7 +49,8 @@ function access(id: number, mode: "abrir" | "buscar"): void {
   console.log(label(movie));
   if (mode === "abrir") {
     const opens = catalog.tree.getDetailOpenCount(id);
-    console.log(`Abertura ${opens}; ${opens < 3 ? `limite de ${2 ** (opens + 1)} rotações` : opens === 3 ? "sobe até o nível 3" : "splay completo"}.`);
+    const position = [...catalog.moviesForBrowsing()].findIndex((item) => item.id === id) + 1;
+    console.log(`Abertura ${opens}; posição no catálogo: ${position}; faixa: ${Math.ceil(position / CATALOG_PAGE_SIZE)}.`);
   }
   console.log(`Profundidade: ${depthBefore} → ${catalog.tree.depthOf(id)} | Raiz: ${rootBefore} → ${catalog.tree.rootId}`);
 }

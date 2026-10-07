@@ -15,12 +15,18 @@ export default async function HomePage({ searchParams }: HomePageProps) {
   const ano = param(params.ano);
   const limite = param(params.limite);
   const year = /^\d{4}$/.test(ano) ? Number(ano) : null;
-  const limit = /^\d+$/.test(limite)
-    ? Math.max(PAGE_SIZE, Number(limite))
+  const requestedLimit = /^\d+$/.test(limite) ? Number(limite) : PAGE_SIZE;
+  const limit = Number.isSafeInteger(requestedLimit)
+    ? Math.max(PAGE_SIZE, Math.ceil(requestedLimit / PAGE_SIZE) * PAGE_SIZE)
     : PAGE_SIZE;
 
   const years = (await getCatalog()).listAvailableYears().reverse();
   const { movies, hasMore } = await searchCatalog(title, year, limit);
+  const returnParams = new URLSearchParams();
+  if (title.trim()) returnParams.set("titulo", title);
+  if (year !== null) returnParams.set("ano", String(year));
+  if (limit > PAGE_SIZE) returnParams.set("limite", String(limit));
+  const returnSearch = returnParams.toString();
 
   return (
     <CatalogBrowser
@@ -28,6 +34,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
       title={title}
       year={year}
       nextLimit={limit + PAGE_SIZE}
+      returnHref={returnSearch ? `/?${returnSearch}` : "/"}
       movies={movies}
       hasMore={hasMore}
     />

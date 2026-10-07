@@ -6,13 +6,14 @@ import type { Movie } from "./types";
 
 export type MovieCardProps = {
   movie: Movie;
+  returnHref?: string;
 };
 
-export default function MovieCard({ movie }: MovieCardProps) {
+export default function MovieCard({ movie, returnHref }: MovieCardProps) {
   return (
     <article className="h-full">
       <Link
-        href={`/filmes/${encodeURIComponent(String(movie.id))}`}
+        href={`/filmes/${encodeURIComponent(String(movie.id))}${returnHref ? `?voltar=${encodeURIComponent(returnHref)}` : ""}`}
         prefetch={false}
         className="group block h-full overflow-hidden rounded-lg border border-border bg-surface hover:border-accent"
       >

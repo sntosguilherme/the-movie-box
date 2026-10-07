@@ -34,7 +34,7 @@ test("inserção inicial deixa o mais popular na raiz e mantém o ranking sem al
   assert.equal(tied.tree.rootId, 10);
   assert.deepEqual([...tied.moviesForBrowsing()].map((movie) => movie.id), [10, 20]);
 
-  catalog.tree.findById(30);
+  catalog.openDetails(30);
   assert.deepEqual([...catalog.moviesForBrowsing()].map((movie) => movie.id), [30, 40, 10, 20]);
 });
 

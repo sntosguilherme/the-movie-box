@@ -13,11 +13,12 @@ export type CatalogBrowserProps = {
   title: string;
   year: number | null;
   nextLimit: number;
+  returnHref: string;
   movies: readonly Movie[];
   hasMore: boolean;
 };
 
-export default function CatalogBrowser({ years, title, year, nextLimit, movies, hasMore }: CatalogBrowserProps) {
+export default function CatalogBrowser({ years, title, year, nextLimit, returnHref, movies, hasMore }: CatalogBrowserProps) {
   const router = useRouter();
   const [query, setQuery] = useState(title);
   const [isPending, startTransition] = useTransition();
@@ -68,7 +69,7 @@ export default function CatalogBrowser({ years, title, year, nextLimit, movies, 
               </p>
             </div>
             <div className={isPending ? "opacity-60" : undefined}>
-              <MovieGrid movies={movies} />
+              <MovieGrid movies={movies} returnHref={returnHref} />
             </div>
             {hasMore && (
               <button type="button" onClick={() => navigate(query, year, nextLimit)} disabled={isPending} className="w-full">

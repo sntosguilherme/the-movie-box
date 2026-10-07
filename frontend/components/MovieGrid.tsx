@@ -3,9 +3,10 @@ import type { Movie } from "./types";
 
 export type MovieGridProps = {
   movies: readonly Movie[];
+  returnHref?: string;
 };
 
-export default function MovieGrid({ movies }: MovieGridProps) {
+export default function MovieGrid({ movies, returnHref }: MovieGridProps) {
   if (movies.length === 0) {
     return <p role="status" className="text-muted">Nenhum filme encontrado.</p>;
   }
@@ -17,7 +18,7 @@ export default function MovieGrid({ movies }: MovieGridProps) {
     >
       {movies.map((movie) => (
         <li key={movie.id} className="min-w-0">
-          <MovieCard movie={movie} />
+          <MovieCard movie={movie} returnHref={returnHref} />
         </li>
       ))}
     </ul>
