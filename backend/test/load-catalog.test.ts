@@ -12,6 +12,27 @@ const mockMovies: Filme[] = [
   { id: 105, title: "O Retorno do Rei", overview: "O fim da jornada.", genres: ["Fantasia"], release_date: "2003-12-17", poster_url: null, popularity: 1, vote_average: 7, vote_count: 10 },
 ];
 
+test("inserção inicial usa popularity decrescente e desempata por ID sem alterar a entrada", () => {
+  const input = Object.freeze([
+    { ...mockMovies[0], id: 20, popularity: 5 },
+    { ...mockMovies[1], id: 30, popularity: 1 },
+    { ...mockMovies[2], id: 40, popularity: 10 },
+    { ...mockMovies[3], id: 10, popularity: 5 },
+  ]);
+  const originalIds = input.map((movie) => movie.id);
+
+  const catalog = new Catalog(input);
+  // A inserção faz splay do último nó; o menos popular deve terminar na raiz.
+  assert.equal(catalog.tree.rootId, 30);
+  assert.equal(catalog.tree.size, 4);
+  assert.deepEqual(input.map((movie) => movie.id), originalIds);
+  assert.deepEqual([...catalog.avl.getIdsByYear(2003)], [10]);
+  for (const movie of input) assert.equal(catalog.tree.peekById(movie.id), movie);
+
+  const tied = new Catalog(input.filter((movie) => movie.popularity === 5));
+  assert.equal(tied.tree.rootId, 20);
+});
+
 test("Requisito: Inserir cada objeto Filme uma única vez na Splay Tree", () => {
   // Passamos objetos duplicados de propósito
   const duplicateData = [...mockMovies, mockMovies[0], mockMovies[1]];

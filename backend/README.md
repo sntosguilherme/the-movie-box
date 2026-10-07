@@ -7,8 +7,9 @@ filmes de cada ano.
 O tipo `Filme` (`src/models/filme.ts`) segue o formato de `data/movies.json`
 descrito no [README da raiz](../README.md#dataset): além dos dados de exibição,
 cada filme traz `popularity` (relevância), `vote_average` (nota de 0 a 10) e
-`vote_count`. As estruturas não dependem desses campos: a Splay Tree continua
-ordenada pelo ID e a AVL pelo ano.
+`vote_count`. O catálogo insere os filmes na Splay Tree por `popularity`
+decrescente (com desempate por ID crescente), sem alterar a ordem da entrada.
+A chave da Splay Tree continua sendo o ID, e a AVL permanece ordenada pelo ano.
 
 ## Splay Tree adaptada
 

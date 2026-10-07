@@ -12,10 +12,17 @@ export class Catalog {
   readonly avl = new AVLTree();
 
   constructor(movies: Iterable<Filme>) {
-    // Constrói a AVL a partir do catálogo, conforme exigido.
-    for (const movie of movies) {
+    const inputMovies = Array.from(movies);
+    const moviesByPopularity = [...inputMovies].sort(
+      (a, b) => b.popularity - a.popularity || a.id - b.id,
+    );
+
+    for (const movie of moviesByPopularity) {
       this.tree.insert(movie);
-      
+    }
+
+    // Mantém a ordem original dos IDs dentro de cada ano na AVL.
+    for (const movie of inputMovies) {
       if (movie.release_date) {
         const year = parseInt(movie.release_date.substring(0, 4), 10);
         if (!isNaN(year)) {
