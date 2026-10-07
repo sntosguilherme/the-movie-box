@@ -7,6 +7,8 @@ function normalizeTitle(value: string): string {
   return value.normalize("NFD").replace(/\p{M}/gu, "").trim().toLocaleLowerCase("pt-BR");
 }
 
+export type YearRange = { start: number; end: number };
+
 export class Catalog {
   readonly tree = new SplayTree();
   readonly avl = new AVLTree();
@@ -65,14 +67,19 @@ export class Catalog {
   }
 
   /**
-   * Busca pelo início do título. Com ano selecionado, compara apenas os filmes
-   * cujos IDs estão naquele ano da AVL; sem ano, percorre a splay tree.
+   * Busca pelo início do título. Com ano (ou intervalo de anos) selecionado, compara
+   * apenas os filmes cujos IDs estão na AVL; sem ano, percorre a splay tree.
    */
-  searchByTitle(query: string, year?: number, skip = 0, limit = 10): Filme[] {
+  searchByTitle(query: string, year?: number | YearRange, skip = 0, limit = 10): Filme[] {
     const term = normalizeTitle(query);
     if (!term) return [];
 
-    const candidates = year === undefined ? this.tree.movies() : this.resolveIds(this.avl.getIdsByYear(year));
+    const candidates =
+      year === undefined
+        ? this.tree.movies()
+        : this.resolveIds(
+            typeof year === "number" ? this.avl.getIdsByYear(year) : this.avl.getIdsByYearRange(year.start, year.end),
+          );
     const results: Filme[] = [];
     let matchCount = 0;
 

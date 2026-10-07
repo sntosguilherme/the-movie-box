@@ -13,7 +13,7 @@ const mockMovie = (id: number, title: string, year: string): Filme => ({
   poster_url: null,
   popularity: 1,
   vote_average: 7,
-  vote_count: 10,
+  vote_count: 10, cast: [], directors: [], writers: [], composers: [], tagline: null, runtime: null, original_title: "", original_language: "pt",
 });
 
 test("Integração - Busca por ano exato retorna filmes completos da Splay Tree", () => {
@@ -108,4 +108,7 @@ test("Integração - Busca por título com ano selecionado compara apenas os fil
   assert.deepEqual(ids(catalog.searchByTitle("matrix", 1999)), [1]);
   assert.deepEqual(catalog.searchByTitle("matrix", 1980), []);
   assert.deepEqual(ids(catalog.searchByTitle("matrix")), [1, 2, 3]);
+  assert.deepEqual(ids(catalog.searchByTitle("matrix", { start: 2000, end: 2009 })), [2, 3]);
+  assert.deepEqual(ids(catalog.searchByTitle("matrix", { start: 1990, end: 2009 })), [1, 2, 3]);
+  assert.deepEqual(catalog.searchByTitle("matrix", { start: 1980, end: 1989 }), []);
 });
