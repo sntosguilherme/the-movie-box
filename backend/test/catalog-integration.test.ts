@@ -109,3 +109,17 @@ test("Integração - Busca por título com ano selecionado compara apenas os fil
   assert.deepEqual(catalog.searchByTitle("matrix", 1980), []);
   assert.deepEqual(ids(catalog.searchByTitle("matrix")), [1, 2, 3]);
 });
+
+test("buscas por ano e título priorizam relevância e a raiz atual", () => {
+  const catalog = new Catalog([
+    { ...mockMovie(1, "Aventura A", "2000"), popularity: 2 },
+    { ...mockMovie(2, "Aventura B", "2000"), popularity: 9 },
+    { ...mockMovie(3, "Aventura C", "2000"), popularity: 5 },
+  ]);
+
+  assert.deepEqual(catalog.searchByExactYear(2000).map((movie) => movie.id), [2, 3, 1]);
+  assert.deepEqual(catalog.searchByTitle("aventura", 2000, 0, 2).map((movie) => movie.id), [2, 3]);
+  catalog.tree.findById(1);
+  assert.deepEqual(catalog.searchByExactYear(2000, 0, 2).map((movie) => movie.id), [1, 2]);
+  assert.deepEqual(catalog.searchByTitle("aventura", undefined, 0, 2).map((movie) => movie.id), [1, 2]);
+});

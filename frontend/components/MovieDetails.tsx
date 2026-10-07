@@ -40,6 +40,29 @@ export default function MovieDetails({ movie }: MovieDetailsProps) {
           <h1 className="break-words text-3xl font-bold">{movie.title}</h1>
           <p className="mt-2 text-muted">{movie.year}</p>
         </div>
+        <dl className="flex flex-wrap gap-x-8 gap-y-4 text-sm">
+          {typeof movie.voteAverage === "number" && (
+            <div>
+              <dt className="text-muted">Nota</dt>
+              <dd className="font-semibold">
+                {movie.voteCount === 0
+                  ? "Sem avaliações"
+                  : `${movie.voteAverage.toLocaleString("pt-BR", { maximumFractionDigits: 1 })}/10`}
+              </dd>
+              {typeof movie.voteCount === "number" && movie.voteCount > 0 && (
+                <dd className="text-muted">{movie.voteCount.toLocaleString("pt-BR")} votos</dd>
+              )}
+            </div>
+          )}
+          {typeof movie.popularity === "number" && (
+            <div>
+              <dt className="text-muted">Popularidade (TMDB)</dt>
+              <dd className="font-semibold">
+                {movie.popularity.toLocaleString("pt-BR", { maximumFractionDigits: 2 })}
+              </dd>
+            </div>
+          )}
+        </dl>
         {movie.genres && movie.genres.length > 0 && (
           <div aria-label="Gêneros" className="flex flex-wrap gap-2">
             {movie.genres.map((genre) => (

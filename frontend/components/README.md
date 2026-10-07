@@ -6,6 +6,10 @@
 
 Para testar, execute `npm run dev` em `frontend/` e abra `/exemplo`. A seção "Prévia dos detalhes" oferece um filme com pôster e outro sem pôster.
 
+Os cards mostram a nota, e a página de detalhes também mostra o número de
+votos e a popularidade do TMDB. Quando não há votos, a interface informa que
+o filme ainda não tem avaliações.
+
 ## Contratos
 
 Os componentes usam a paleta de `app/globals.css`. Importe cada componente pelo seu arquivo em `@/components/`.

@@ -22,6 +22,13 @@ export default function MovieCard({ movie }: MovieCardProps) {
             {movie.title}
           </h3>
           <p className="text-sm text-muted">{movie.year}</p>
+          <div className="space-y-1 text-sm text-muted">
+            {movie.voteCount === 0 ? (
+              <p>Sem avaliações</p>
+            ) : typeof movie.voteAverage === "number" ? (
+              <p>Nota: {movie.voteAverage.toLocaleString("pt-BR", { maximumFractionDigits: 1 })}/10</p>
+            ) : null}
+          </div>
           <span className="text-sm text-muted">Ver detalhes</span>
         </div>
       </Link>

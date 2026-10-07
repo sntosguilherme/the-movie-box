@@ -32,7 +32,7 @@ test("inserção, busca com splay, duplicata e remoção preservam o catálogo",
 test("detalhes aumentam gradualmente as rotações; consultas não mudam a raiz", () => {
   const catalog = new Catalog(Array.from({ length: 16 }, (_, index) => {
     const id = 16 - index;
-    return { ...movie(id), popularity: id };
+    return { ...movie(id), popularity: 17 - id };
   }));
   const tree = catalog.tree;
   assert.equal(tree.rootId, 1);
@@ -58,8 +58,9 @@ test("detalhes aumentam gradualmente as rotações; consultas não mudam a raiz"
 });
 
 test("busca por título percorre sem splay e compara o início ignorando caixa e acentos", () => {
-  const catalog = new Catalog([movie(3, "Ação Total"), movie(1, "Outro"), movie(2, "Mais AÇÃO"), movie(4, "  ACAO final")]);
-  assert.deepEqual(catalog.searchByTitle(" ação ").map(({ id }) => id), [3, 4]);
+  const catalog = new Catalog([movie(3, "Ação Total"), movie(1, "Outro"), movie(2, "Mais AÇÃO"), movie(4, "  ACAO final")]
+    .map((filme) => ({ ...filme, popularity: filme.id })));
+  assert.deepEqual(catalog.searchByTitle(" ação ").map(({ id }) => id), [4, 3]);
   assert.deepEqual(catalog.searchByTitle("acao t").map(({ id }) => id), [3]);
   assert.deepEqual(catalog.searchByTitle("total"), []);
   assert.deepEqual(catalog.searchByTitle(" "), []);
