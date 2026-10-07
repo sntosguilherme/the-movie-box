@@ -5,11 +5,11 @@ import type { Filme } from "../src/models/filme.ts";
 
 // Massa de dados simulada para os testes
 const mockMovies: Filme[] = [
-  { id: 101, title: "O Senhor dos Anéis", overview: "Um anel para todos governar.", genres: ["Fantasia"], release_date: "2001-12-19", poster_url: null, popularity: 1, vote_average: 7, vote_count: 10 },
-  { id: 102, title: "Matrix", overview: "O que é a Matrix?", genres: ["Ficção Científica"], release_date: "1999-03-31", poster_url: null, popularity: 1, vote_average: 7, vote_count: 10 },
-  { id: 103, title: "O Senhor dos Anéis: As Duas Torres", overview: "A batalha continua.", genres: ["Fantasia"], release_date: "2002-12-18", poster_url: null, popularity: 1, vote_average: 7, vote_count: 10 },
-  { id: 104, title: "Matrix Reloaded", overview: "Neo retorna.", genres: ["Ficção Científica"], release_date: "2003-05-15", poster_url: null, popularity: 1, vote_average: 7, vote_count: 10 },
-  { id: 105, title: "O Retorno do Rei", overview: "O fim da jornada.", genres: ["Fantasia"], release_date: "2003-12-17", poster_url: null, popularity: 1, vote_average: 7, vote_count: 10 },
+  { id: 101, title: "O Senhor dos Anéis", overview: "Um anel para todos governar.", genres: ["Fantasia"], release_date: "2001-12-19", poster_url: null, popularity: 1, vote_average: 7, vote_count: 10, cast: [], directors: [], writers: [], composers: [], tagline: null, runtime: null, original_title: "", original_language: "pt" },
+  { id: 102, title: "Matrix", overview: "O que é a Matrix?", genres: ["Ficção Científica"], release_date: "1999-03-31", poster_url: null, popularity: 1, vote_average: 7, vote_count: 10, cast: [], directors: [], writers: [], composers: [], tagline: null, runtime: null, original_title: "", original_language: "pt" },
+  { id: 103, title: "O Senhor dos Anéis: As Duas Torres", overview: "A batalha continua.", genres: ["Fantasia"], release_date: "2002-12-18", poster_url: null, popularity: 1, vote_average: 7, vote_count: 10, cast: [], directors: [], writers: [], composers: [], tagline: null, runtime: null, original_title: "", original_language: "pt" },
+  { id: 104, title: "Matrix Reloaded", overview: "Neo retorna.", genres: ["Ficção Científica"], release_date: "2003-05-15", poster_url: null, popularity: 1, vote_average: 7, vote_count: 10, cast: [], directors: [], writers: [], composers: [], tagline: null, runtime: null, original_title: "", original_language: "pt" },
+  { id: 105, title: "O Retorno do Rei", overview: "O fim da jornada.", genres: ["Fantasia"], release_date: "2003-12-17", poster_url: null, popularity: 1, vote_average: 7, vote_count: 10, cast: [], directors: [], writers: [], composers: [], tagline: null, runtime: null, original_title: "", original_language: "pt" },
 ];
 
 test("Requisito: Inserir cada objeto Filme uma única vez na Splay Tree", () => {
@@ -59,6 +59,7 @@ test("Requisito: Evitar enviar o catálogo inteiro ao navegador (Paginação por
   const bulkMovies = Array.from({ length: 50 }, (_, i) => ({
     id: i + 1, title: `Filme ${i + 1}`, overview: "", genres: [], release_date: "2020-01-01", poster_url: null,
     popularity: 0, vote_average: 0, vote_count: 0,
+    cast: [], directors: [], writers: [], composers: [], tagline: null, runtime: null, original_title: "", original_language: "pt",
   }));
   const catalog = new Catalog(bulkMovies);
 

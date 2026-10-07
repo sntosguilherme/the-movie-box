@@ -7,6 +7,7 @@ import { SplayTree } from "../src/structures/splay-tree.ts";
 const movie = (id: number, title = `Filme ${id}`): Filme => ({
   id, title, overview: "", genres: [], release_date: "2000-01-01", poster_url: null,
   popularity: 0, vote_average: 0, vote_count: 0,
+  cast: [], directors: [], writers: [], composers: [], tagline: null, runtime: null, original_title: "", original_language: "pt",
 });
 
 test("inserção, busca com splay, duplicata e remoção preservam o catálogo", () => {

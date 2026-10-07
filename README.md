@@ -57,6 +57,14 @@ métodos implementados nas estruturas.
 | `popularity` | `number` | Relevância do TMDB, sem limite superior (maior é mais relevante) |
 | `vote_average` | `number` | Nota média de 0 a 10 |
 | `vote_count` | `number` | Quantidade de votos; com 0 votos, `vote_average` também é 0 |
+| `cast` | `{ id, name, character, profile_url }[]` | Até seis atores, na ordem dos créditos; vazio em 4% dos filmes. `id` é o ID de pessoa no TMDB e `profile_url` a foto atual (ou `null`) |
+| `directors` | `string[]` | Direção (até três nomes) |
+| `writers` | `string[]` | Roteiro: funções `Screenplay` e `Writer` (até três nomes) |
+| `composers` | `string[]` | Música: funções `Original Music Composer` e `Music` (até três nomes) |
+| `tagline` | `string \| null` | Frase de divulgação; presente em 48% dos filmes |
+| `runtime` | `number \| null` | Duração em minutos |
+| `original_title` | `string` | Título no idioma original, como está no dataset (pode estar em outro alfabeto, como 千と千尋の神隠し) |
+| `original_language` | `string` | Código ISO 639-1 do TMDB; `cn` é cantonês |
 
 `popularity`, `vote_average` e `vote_count` vêm do `movies_metadata.csv` do
 [The Movies Dataset](https://www.kaggle.com/datasets/rounakbanik/the-movies-dataset),
@@ -70,3 +78,32 @@ python pre-processing/add_ratings.py caminho/movies_metadata.csv
 
 O script só usa a biblioteca padrão, preserva a formatação do JSON e pode ser
 executado de novo sobre um arquivo já atualizado.
+
+`cast`, `directors`, `writers` e `composers` vêm do `credits.csv` do mesmo dataset,
+também associados pelo `id`; quando o CSV repete um ID, vale a linha com mais créditos.
+Para refazer a junção:
+
+```powershell
+python pre-processing/add_credits.py caminho/credits.csv
+```
+
+As fotos do `credits.csv` (de 2017) quase todas deixaram de existir no CDN do TMDB, então
+`profile_url` vem da API do TMDB, consultada uma vez no pré-processamento: o app não
+precisa da API para exibir as fotos. O script precisa de um token de leitura da API
+(gratuito, em themoviedb.org → Configurações → API) na variável `TMDB_TOKEN`; no projeto
+ele fica em `frontend/.env`, ignorado pelo git. Rode depois de `add_credits.py`:
+
+```powershell
+python pre-processing/add_cast_photos.py
+```
+
+As respostas da API ficam em `pre-processing/processed/`, então uma execução interrompida
+continua de onde parou.
+
+`tagline`, `runtime`, `original_title` e `original_language` vêm do mesmo
+`movies_metadata.csv` usado por `add_ratings.py`, escolhendo a mesma linha quando o ID
+se repete:
+
+```powershell
+python pre-processing/add_details.py caminho/movies_metadata.csv
+```
