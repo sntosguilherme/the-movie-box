@@ -1,38 +1,13 @@
-// implementação de lista encadeada para armazenar os id's
-class IdNode {
-  constructor(public id: number, public next: IdNode | null = null) {}
-}
+import { SelfOrganizingList } from "./self-organizing-list.ts";
 
-class IdLinkedList implements Iterable<number> {
-  head: IdNode | null = null;
-  tail: IdNode | null = null;
-
-  add(id: number): void {
-    const newNode = new IdNode(id);
-    if (!this.head) {
-      this.head = newNode;
-      this.tail = newNode;
-    } else {
-      this.tail!.next = newNode;
-      this.tail = newNode;
-    }
-  }
-
-  *[Symbol.iterator](): IterableIterator<number> {
-    let current = this.head;
-    while (current) {
-      yield current.id;
-      current = current.next;
-    }
-  }
-}
+// implementação do índice de anos com IDs em uma lista auto-organizável
 
 // implementação do nó da AVL
 class AVLNode {
   height = 1;
   left: AVLNode | null = null;
   right: AVLNode | null = null;
-  readonly ids = new IdLinkedList(); // Utilizando a lista encadeada exigida
+  readonly ids = new SelfOrganizingList<number>();
 
   constructor(public readonly year: number, id: number) {
     this.ids.add(id);
@@ -115,6 +90,16 @@ export class AVLTree {
       }
       current = year < current.year ? current.left : current.right;
     }
+  }
+
+  /** Move o ID acessado para o início da lista do ano informado. */
+  moveIdToFront(year: number, id: number): boolean {
+    let current = this.root;
+    while (current) {
+      if (year === current.year) return current.ids.find(id) !== undefined;
+      current = year < current.year ? current.left : current.right;
+    }
+    return false;
   }
 
   /** Consulta de um intervalo de anos, percorrendo a árvore em ordem. */

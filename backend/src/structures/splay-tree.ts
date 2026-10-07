@@ -77,10 +77,9 @@ export class SplayTree {
     if (!node) return undefined;
     node.detailOpens++;
 
-    // Nas duas primeiras aberturas, o limite é 2^(i + 1) rotações. Na terceira,
-    // o filme sobe até o nível 3; na quarta, conclui o splay na raiz.
-    if (node.detailOpens < 3) this.splay(node, 2 ** (node.detailOpens + 1));
-    else if (node.detailOpens === 3) this.splayToDepth(node, 3);
+    // Níveis contam a raiz como 1; a profundidade é recalculada a cada rotação.
+    if (node.detailOpens === 1) this.splayToDepth(node, 3);
+    else if (node.detailOpens === 2) this.splayToDepth(node, 1);
     else this.splay(node);
     return node.movie;
   }

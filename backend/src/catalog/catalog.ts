@@ -28,7 +28,12 @@ export class Catalog {
   }
 
   openDetails(id: number): Filme | undefined {
-    return this.tree.openDetails(id);
+    const movie = this.tree.openDetails(id);
+    if (!movie?.release_date) return movie;
+
+    const year = parseInt(movie.release_date.substring(0, 4), 10);
+    if (!isNaN(year)) this.avl.moveIdToFront(year, id);
+    return movie;
   }
 
   resolveIds(ids: Iterable<number>, skip = 0, limit = Infinity): Filme[] {
