@@ -14,8 +14,12 @@ export class Catalog {
   readonly avl = new AVLTree();
 
   constructor(movies: Iterable<Filme>) {
+    // A Splay promove toda inserção à raiz. Inserir da menor para a maior
+    // popularidade deixa os filmes mais populares nos níveis superiores iniciais.
+    const moviesByPopularity = [...movies].sort((a, b) => a.popularity - b.popularity);
+
     // Constrói a AVL a partir do catálogo, conforme exigido.
-    for (const movie of movies) {
+    for (const movie of moviesByPopularity) {
       this.tree.insert(movie);
       
       if (movie.release_date) {

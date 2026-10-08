@@ -14,6 +14,9 @@ ordenada pelo ID e a AVL pelo ano.
 
 A Splay Tree adaptada guarda cada objeto `Filme` uma única vez, ordenado pelo
 `id`. A busca explícita por ID usa o splay tradicional e move o nó até a raiz.
+A carga inicial insere os filmes da menor para a maior `popularity`; como cada
+inserção faz splay completo, o filme mais popular começa na raiz e é exibido
+primeiro no percurso por níveis.
 A abertura da página de detalhes aproxima o filme gradualmente: na primeira
 abertura ele sobe até o nível 4, na segunda até o nível 2 e, na terceira, até
 a raiz (nível 1). As rotações `zig`, `zig-zig` e `zig-zag` preservam a
