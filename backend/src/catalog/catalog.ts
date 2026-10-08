@@ -14,8 +14,12 @@ export class Catalog {
   readonly avl = new AVLTree();
 
   constructor(movies: Iterable<Filme>) {
+    // A Splay promove toda inserção à raiz. Inserir da menor para a maior
+    // popularidade deixa os filmes mais populares nos níveis superiores iniciais.
+    const moviesByPopularity = [...movies].sort((a, b) => a.popularity - b.popularity);
+
     // Constrói a AVL a partir do catálogo, conforme exigido.
-    for (const movie of movies) {
+    for (const movie of moviesByPopularity) {
       this.tree.insert(movie);
       
       if (movie.release_date) {
@@ -28,7 +32,12 @@ export class Catalog {
   }
 
   openDetails(id: number): Filme | undefined {
-    return this.tree.openDetails(id);
+    const movie = this.tree.openDetails(id);
+    if (!movie?.release_date) return movie;
+
+    const year = parseInt(movie.release_date.substring(0, 4), 10);
+    if (!isNaN(year)) this.avl.moveIdToFront(year, id);
+    return movie;
   }
 
   resolveIds(ids: Iterable<number>, skip = 0, limit = Infinity): Filme[] {

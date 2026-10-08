@@ -35,7 +35,7 @@ export async function searchCatalog(
     found = catalog.searchByYearRange(range.start, range.end, 0, limit + 1);
   } else {
     found = [];
-    for (const filme of catalog.tree.movies()) {
+    for (const filme of catalog.tree.moviesLevelOrder()) {
       if (found.length > limit) break;
       found.push(filme);
     }
