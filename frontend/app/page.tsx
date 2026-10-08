@@ -1,5 +1,5 @@
 import CatalogBrowser from "@/components/CatalogBrowser";
-import { getCatalog, PAGE_SIZE, searchCatalog } from "@/lib/catalog";
+import { getCatalog, getRecentlyOpenedMovies, PAGE_SIZE, searchCatalog } from "@/lib/catalog";
 
 type HomePageProps = {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
@@ -22,8 +22,12 @@ export default async function HomePage({ searchParams }: HomePageProps) {
     ? Math.max(PAGE_SIZE, Number(limite))
     : PAGE_SIZE;
 
-  const years = (await getCatalog()).listAvailableYears().reverse();
-  const { movies, hasMore } = await searchCatalog(title, year, decade, limit);
+  const [catalog, { movies, hasMore }, recentMovies] = await Promise.all([
+    getCatalog(),
+    searchCatalog(title, year, decade, limit),
+    getRecentlyOpenedMovies(),
+  ]);
+  const years = catalog.listAvailableYears().reverse();
 
   return (
     <CatalogBrowser
@@ -34,6 +38,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
       nextLimit={limit + PAGE_SIZE}
       movies={movies}
       hasMore={hasMore}
+      recentMovies={recentMovies}
     />
   );
 }

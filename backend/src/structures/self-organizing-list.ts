@@ -19,6 +19,15 @@ export class SelfOrganizingList<T> implements Iterable<T> {
     this.tail = node;
   }
 
+  /** Move um valor existente para o início; se for novo, inclui-o já no início. */
+  moveToFrontOrAdd(value: T): void {
+    if (this.find(value) !== undefined) return;
+
+    const node = new ListNode(value, this.head);
+    this.head = node;
+    if (!this.tail) this.tail = node;
+  }
+
   /** Busca um valor e, se encontrado, move seu nó para o início da lista. */
   find(value: T): T | undefined {
     let previous: ListNode<T> | null = null;

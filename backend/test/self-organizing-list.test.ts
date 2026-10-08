@@ -23,3 +23,12 @@ test("SelfOrganizingList - busca ausente não reorganiza a lista", () => {
   assert.equal(list.find(99), undefined);
   assert.deepEqual([...list], [10, 20]);
 });
+
+test("SelfOrganizingList - moveToFrontOrAdd insere uma vez e move acessos repetidos", () => {
+  const list = new SelfOrganizingList<number>();
+  list.moveToFrontOrAdd(10);
+  list.moveToFrontOrAdd(20);
+  list.moveToFrontOrAdd(10);
+
+  assert.deepEqual([...list], [10, 20]);
+});

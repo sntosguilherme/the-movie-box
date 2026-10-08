@@ -2,6 +2,7 @@
 import type { Filme } from "../models/filme.ts";
 import { SplayTree } from "../structures/splay-tree.ts";
 import { AVLTree } from "../structures/avl-tree.ts";
+import { SelfOrganizingList } from "../structures/self-organizing-list.ts";
 
 function normalizeTitle(value: string): string {
   return value.normalize("NFD").replace(/\p{M}/gu, "").trim().toLocaleLowerCase("pt-BR");
@@ -12,6 +13,8 @@ export type YearRange = { start: number; end: number };
 export class Catalog {
   readonly tree = new SplayTree();
   readonly avl = new AVLTree();
+  /** IDs dos detalhes abertos, em ordem Move-to-Front (mais recente primeiro). */
+  readonly recentIds = new SelfOrganizingList<number>();
 
   constructor(movies: Iterable<Filme>) {
     // A Splay promove toda inserção à raiz. Inserir da menor para a maior
@@ -33,11 +36,18 @@ export class Catalog {
 
   openDetails(id: number): Filme | undefined {
     const movie = this.tree.openDetails(id);
-    if (!movie?.release_date) return movie;
+    if (!movie) return undefined;
 
+    this.recentIds.moveToFrontOrAdd(id);
+    if (!movie.release_date) return movie;
     const year = parseInt(movie.release_date.substring(0, 4), 10);
     if (!isNaN(year)) this.avl.moveIdToFront(year, id);
     return movie;
+  }
+
+  /** Filmes abertos recentemente, sem repetições e com o último acesso primeiro. */
+  recentlyOpened(limit = Infinity): Filme[] {
+    return this.resolveIds(this.recentIds, 0, limit);
   }
 
   resolveIds(ids: Iterable<number>, skip = 0, limit = Infinity): Filme[] {

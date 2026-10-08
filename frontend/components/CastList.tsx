@@ -10,10 +10,10 @@ export type CastListProps = {
 };
 
 const AVATAR_TONES = [
-  "from-accent/80 to-primary",
-  "from-gold/70 to-primary",
-  "from-primary-hover to-surface-raised",
-  "from-accent/50 to-surface-raised",
+  "bg-primary",
+  "bg-surface-raised",
+  "bg-primary-hover",
+  "bg-primary",
 ] as const;
 
 function initials(name: string) {
@@ -27,7 +27,7 @@ function CastPhoto({ member, tone }: { member: CastMember; tone: string }) {
 
   if (!url || status === "failed") {
     return (
-      <div aria-hidden="true" className={`grid h-full w-full place-items-center bg-gradient-to-br ${tone} font-display text-5xl text-white/90`}>
+      <div aria-hidden="true" className={`grid h-full w-full place-items-center ${tone} font-display text-5xl text-white/90`}>
         {initials(member.name)}
       </div>
     );
@@ -35,7 +35,7 @@ function CastPhoto({ member, tone }: { member: CastMember; tone: string }) {
 
   return (
     <>
-      {status === "loading" && <div aria-hidden="true" className="shimmer absolute inset-0" />}
+      {status === "loading" && <div aria-hidden="true" className="absolute inset-0 animate-pulse bg-surface-raised motion-reduce:animate-none" />}
       <Image
         src={url.replace(TMDB_PREFIX, "")}
         loader={tmdbLoader}

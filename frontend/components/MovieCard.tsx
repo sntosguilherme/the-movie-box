@@ -20,6 +20,8 @@ export default function MovieCard({ movie, eager = false }: MovieCardProps) {
     <article className="h-full">
       <Link
         href={href}
+        // A rota de detalhes reorganiza as estruturas; só deve ser carregada após o clique.
+        prefetch={false}
         onClick={(event) => {
           // Cliques que abrem outra aba não têm o catálogo no histórico.
           if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
