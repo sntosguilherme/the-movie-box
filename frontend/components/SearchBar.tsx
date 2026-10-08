@@ -66,7 +66,7 @@ export default function SearchBar({ value, onChange, recentMovies = [] }: Search
               const href = `/filmes/${encodeURIComponent(String(movie.id))}`;
               return (
                 <li key={movie.id}>
-                  <Link href={href} onClick={() => rememberCatalogOrigin(href)} className="flex items-center justify-between gap-4 px-4 py-2.5 text-sm transition-colors hover:bg-white/[0.06]">
+                  <Link href={href} prefetch={false} onClick={() => rememberCatalogOrigin(href)} className="flex items-center justify-between gap-4 px-4 py-2.5 text-sm transition-colors hover:bg-white/[0.06]">
                     <span className="min-w-0 truncate font-medium text-foreground">{movie.title}</span>
                     <span className="shrink-0 tabular-nums text-muted">{movie.year}</span>
                   </Link>
