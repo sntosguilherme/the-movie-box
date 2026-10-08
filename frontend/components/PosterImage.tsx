@@ -52,7 +52,7 @@ export default function PosterImage({
     <div className={`relative aspect-[2/3] overflow-hidden bg-surface ${className}`}>
       {showPoster ? (
         <>
-          {!isLoaded && <div aria-hidden="true" className="shimmer absolute inset-0" />}
+          {!isLoaded && <div aria-hidden="true" className="absolute inset-0 animate-pulse bg-surface-raised motion-reduce:animate-none" />}
           {placeholderSizes && !isLoaded && (
             <Image {...source} alt="" aria-hidden="true" fill sizes={placeholderSizes} loading="eager" className="object-cover" />
           )}
@@ -74,7 +74,7 @@ export default function PosterImage({
         <div
           role="img"
           aria-label={`Pôster indisponível para ${title}`}
-          className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-gradient-to-br from-primary via-surface-raised to-background p-4 text-center"
+          className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-surface-raised p-4 text-center"
         >
           <Film aria-hidden="true" className="h-8 w-8 text-accent/80" strokeWidth={1.5} />
           <span className="line-clamp-3 font-display text-xl leading-tight text-foreground/90">{title}</span>

@@ -77,10 +77,6 @@ export default function CatalogBrowser({ years, title, year, decade, nextLimit, 
     <>
       <Header search={<SearchBar value={query} onChange={changeTitle} />} isLoading={isPending || isLoadingMore} />
       <main className="relative isolate">
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[28rem] bg-[radial-gradient(60rem_22rem_at_15%_-10%,color-mix(in_oklab,var(--accent)_22%,transparent),transparent_70%),radial-gradient(40rem_18rem_at_90%_0%,color-mix(in_oklab,var(--primary)_60%,transparent),transparent_70%)]"
-        />
         <div className="mx-auto w-full max-w-[1400px] px-4 pb-24 sm:px-6 lg:px-10">
           <section className="animate-fade-up pb-8 pt-10 sm:pt-14">
             <h1 className="font-display text-5xl leading-[0.95] tracking-tight sm:text-7xl">
@@ -91,7 +87,7 @@ export default function CatalogBrowser({ years, title, year, decade, nextLimit, 
             </p>
           </section>
 
-          <section aria-label="Filtro por década e ano" className="animate-fade-up rounded-2xl border border-white/[0.06] bg-surface/60 p-4 backdrop-blur-sm [animation-delay:80ms] sm:p-6">
+          <section aria-label="Filtro por década e ano" className="animate-fade-up rounded-2xl border border-white/[0.06] bg-surface p-4 [animation-delay:80ms] sm:p-6">
             <YearButtons
               years={years}
               selectedYear={year}
@@ -167,9 +163,9 @@ export default function CatalogBrowser({ years, title, year, decade, nextLimit, 
             ) : (
               movies.length > 0 && (
                 <p className="mt-16 flex items-center justify-center gap-4 text-xs font-semibold uppercase tracking-[0.2em] text-muted/70">
-                  <span aria-hidden="true" className="h-px w-12 bg-gradient-to-r from-transparent to-border-strong" />
+                  <span aria-hidden="true" className="h-px w-12 bg-border-strong" />
                   Fim da lista
-                  <span aria-hidden="true" className="h-px w-12 bg-gradient-to-l from-transparent to-border-strong" />
+                  <span aria-hidden="true" className="h-px w-12 bg-border-strong" />
                 </p>
               )
             )}

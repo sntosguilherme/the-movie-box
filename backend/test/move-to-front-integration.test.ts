@@ -30,3 +30,16 @@ test("abrir detalhes promove o filme na lista do ano", () => {
   assert.equal(catalog.openDetails(3)?.id, 3);
   assert.deepEqual(catalog.searchByExactYear(2000).map(({ id }) => id), [3, 1, 2]);
 });
+
+test("abrir detalhes alimenta a lista MTF global de recentes", () => {
+  const catalog = new Catalog([movie(1), movie(2), movie(3)]);
+
+  assert.deepEqual(catalog.recentlyOpened(), []);
+  catalog.openDetails(1);
+  catalog.openDetails(3);
+  catalog.openDetails(1);
+
+  assert.deepEqual(catalog.recentlyOpened().map(({ id }) => id), [1, 3]);
+  catalog.openDetails(999);
+  assert.deepEqual(catalog.recentlyOpened().map(({ id }) => id), [1, 3]);
+});

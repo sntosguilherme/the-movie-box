@@ -2,7 +2,7 @@
 
 ## Detalhes do filme
 
-`BackButton` liga ao catálogo em `/`. `MovieDetails` recebe `movie: Movie` e exibe título, ano, nota, popularidade, gêneros, sinopse, duração, tagline, título original (`OriginalTitle`), ficha técnica (direção, roteiro e música, quando houver), `PosterImage` e o elenco em `CastList`; clicar no pôster abre um `<dialog>` com a versão ampliada. `PosterImage` recebe `title`, `posterUrl?`, `sizes`, `placeholderSizes?`, `eager?`, `transitionName?` e `className?`, mantém proporção 2:3, mostra um brilho animado até a imagem carregar e um cartão com o título quando o pôster está ausente ou falha. `transitionName` liga o pôster da grade ao da página de detalhes por um `<ViewTransition>` do React. O tipo `Movie` também aceita `genres?: readonly string[]`, `overview?: string | null`, `popularity?: number`, `voteAverage?: number`, `voteCount?: number`, `cast?: readonly CastMember[]` (`{ name, character, photoUrl? }`) `directors?`, `writers?` e `composers?: readonly string[]`, `tagline?: string | null`, `runtime?: number | null`, `originalTitle?: string` e `originalLanguage?: string`.
+`BackButton` liga ao catálogo em `/`. `MovieDetails` recebe `movie: Movie` e exibe título, ano, nota, popularidade, gêneros, sinopse, duração, tagline, título original (`OriginalTitle`), ficha técnica (direção, roteiro e música, quando houver), `PosterImage` e o elenco em `CastList`; clicar no pôster abre um `<dialog>` com a versão ampliada. `PosterImage` recebe `title`, `posterUrl?`, `sizes`, `placeholderSizes?`, `eager?`, `transitionName?` e `className?`, mantém proporção 2:3, mostra um fundo sólido pulsante até a imagem carregar e um cartão com o título quando o pôster está ausente ou falha. `transitionName` liga o pôster da grade ao da página de detalhes por um `<ViewTransition>` do React. O tipo `Movie` também aceita `genres?: readonly string[]`, `overview?: string | null`, `popularity?: number`, `voteAverage?: number`, `voteCount?: number`, `cast?: readonly CastMember[]` (`{ name, character, photoUrl? }`) `directors?`, `writers?` e `composers?: readonly string[]`, `tagline?: string | null`, `runtime?: number | null`, `originalTitle?: string` e `originalLanguage?: string`.
 
 Para testar, execute `npm run dev` em `frontend/` e abra `/exemplo`. A seção "Prévia dos detalhes" oferece um filme com pôster e outro sem pôster.
 
@@ -12,9 +12,9 @@ Os componentes usam a paleta de `app/globals.css`. Importe cada componente pelo 
 
 | Componente | Props | Comportamento |
 | --- | --- | --- |
-| `Header` | `search?: ReactNode`, `isLoading?: boolean` | Cabeçalho fixo com a identidade do projeto e link para `/`; quando recebe a busca, exibe o campo à direita. `isLoading` mostra uma barra de progresso na borda inferior. |
+| `Header` | `search?: ReactNode`, `isLoading?: boolean` | Cabeçalho fixo com a identidade do projeto, link para `/` e botão `Recentes` que abre `/recentes`; quando recebe a busca, exibe o campo à direita. `isLoading` mostra uma barra de progresso na borda inferior. |
 | `SearchBar` | `value: string`, `onChange(value)` | Campo controlado; digitar informa o novo título e o botão × informa `""`, devolvendo o foco ao campo. |
-| `YearButtons` | `years: readonly number[]`, `selectedYear: number \| null`, `selectedDecade: number \| null`, `onSelectYear(year)`, `onSelectDecade(decade)` | Agrupa por décadas os anos disponíveis na AVL. Clicar numa década informa `onSelectDecade` (filtro por intervalo) e exibe os anos dela logo abaixo; clicar num ano informa `onSelectYear`. A década aberta é a selecionada ou a do ano selecionado. `onSelectYear(null)` representa todos os anos. Exporta também `decadeOf(year)` e `decadeLabel(decade)`. |
+| `YearButtons` | `years: readonly number[]`, `selectedYear: number \| null`, `selectedDecade: number \| null`, `onSelectYear(year)`, `onSelectDecade(decade)` | Linha cronológica única, com pontos nas décadas disponíveis na AVL. Clicar numa década informa `onSelectDecade` e amplia a linha para seus anos; clicar num ano informa `onSelectYear`. A década aberta vem da seleção ou do ano na URL. O botão Décadas volta à visão geral e chama `onSelectYear(null)`; as setas passam às décadas vizinhas. A linha rola em telas pequenas e aceita Tab, Enter, Espaço, setas, Home e End. Exporta também `decadeOf(year)` e `decadeLabel(decade)`. |
 | `DecadeStory` | `decade: number` | Painel com o contexto do cinema na década: título, resumo e três marcos. Os textos ficam em `decades.ts` (`DECADE_STORIES`), indexados pelo primeiro ano da década. |
 | `CastList` | `cast: readonly CastMember[]` | Elenco em cartões com foto (pelo loader do TMDB), nome e personagem; sem foto, ou se ela falhar, mostra as iniciais. |
 | `Footer` | — | Rodapé com a atribuição ao TMDB exigida pelos termos de uso da API. |
@@ -38,11 +38,18 @@ import YearButtons from "@/components/YearButtons";
 export default function CatalogFilters({ years }: { years: readonly number[] }) {
   const [title, setTitle] = useState("");
   const [year, setYear] = useState<number | null>(null);
+  const [decade, setDecade] = useState<number | null>(null);
 
   return (
     <div className="space-y-6">
       <SearchBar value={title} onChange={setTitle} />
-      <YearButtons years={years} selectedYear={year} onSelectYear={setYear} />
+      <YearButtons
+        years={years}
+        selectedYear={year}
+        selectedDecade={decade}
+        onSelectYear={(next) => { setYear(next); setDecade(null); }}
+        onSelectDecade={(next) => { setYear(null); setDecade(next); }}
+      />
     </div>
   );
 }

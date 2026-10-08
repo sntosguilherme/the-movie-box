@@ -87,7 +87,7 @@ export default function OriginalTitle({ title, language, verticalClassName = "" 
         lang={lang}
         dir="auto"
         style={fontStyle}
-        className={`inline-block bg-gradient-to-r from-accent via-accent to-gold bg-clip-text pb-1 text-3xl leading-snug tracking-wide text-transparent sm:text-4xl`}
+        className="inline-block pb-1 text-3xl leading-snug tracking-wide text-accent sm:text-4xl"
       >
         {title}
       </span>
@@ -112,7 +112,7 @@ export default function OriginalTitle({ title, language, verticalClassName = "" 
         <span
           lang={lang}
           style={fontStyle}
-          className={`animate-ink-reveal bg-gradient-to-b from-accent via-accent to-gold bg-clip-text text-6xl leading-none tracking-[0.12em] text-transparent [writing-mode:vertical-rl]`}
+          className="animate-ink-reveal text-6xl leading-none tracking-[0.12em] text-accent [writing-mode:vertical-rl]"
         >
           {title}
         </span>

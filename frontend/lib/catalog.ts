@@ -46,6 +46,11 @@ export async function searchCatalog(
   };
 }
 
+/** Lista a ordem atual da lista MTF de detalhes abertos neste processo do servidor. */
+export async function getRecentlyOpenedMovies() {
+  return (await getCatalog()).recentlyOpened().map(toMovie);
+}
+
 export function toMovie(filme: Filme): Movie {
   return {
     id: filme.id,

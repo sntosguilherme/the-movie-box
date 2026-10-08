@@ -12,7 +12,7 @@ export default function DecadeStory({ decade }: DecadeStoryProps) {
   return (
     <section
       aria-labelledby="decade-story-title"
-      className="relative isolate animate-fade-up overflow-hidden rounded-2xl border border-white/[0.06] bg-gradient-to-br from-primary/50 via-surface to-surface p-6 sm:p-8"
+      className="relative isolate animate-fade-up overflow-hidden rounded-2xl border border-white/[0.06] bg-surface p-6 sm:p-8"
     >
       <span
         aria-hidden="true"
