@@ -2,7 +2,7 @@ export default function Footer() {
   return (
     <footer className="border-t border-white/[0.06]">
       <div className="mx-auto flex w-full max-w-[1400px] flex-col gap-1 px-4 py-8 text-xs text-muted/80 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-10">
-        <p>Catálogo de Filmes · Estrutura de Dados II</p>
+        <p>THE MOVIE BOX. · Estrutura de Dados II</p>
         {/* Atribuição exigida pelos termos de uso da API do TMDB. */}
         <p>
           Dados e imagens do{" "}

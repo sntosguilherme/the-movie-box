@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useId, useRef, useState, type CSSProperties, type KeyboardEvent } from "react";
-import { ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowLeft, ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
 import styles from "./YearButtons.module.css";
 
 export type YearButtonsProps = {
@@ -21,6 +21,7 @@ export function decadeLabel(decade: number) {
 }
 
 export default function YearButtons({ years, selectedYear, selectedDecade, onSelectYear, onSelectDecade }: YearButtonsProps) {
+  const [isExpanded, setIsExpanded] = useState(true);
   const decades = new Map<number, number[]>();
   for (const year of [...new Set(years)].sort((a, b) => a - b)) {
     const decade = decadeOf(year);
@@ -85,8 +86,20 @@ export default function YearButtons({ years, selectedYear, selectedDecade, onSel
 
   return (
     <fieldset className="min-w-0">
-      <legend className="mb-4 text-xs font-semibold uppercase tracking-[0.18em] text-muted">Linha do tempo do cinema</legend>
-      <div className="flex flex-wrap items-center justify-between gap-3">
+      <legend className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-muted">Navegação por lançamento</legend>
+      <button
+        type="button"
+        aria-expanded={isExpanded}
+        aria-controls={timelineId}
+        onClick={() => setIsExpanded((expanded) => !expanded)}
+        className="flex w-full items-center justify-between rounded-xl border border-white/[0.06] bg-surface-raised px-4 py-3 text-left text-sm font-semibold text-foreground transition-colors hover:border-white/15"
+      >
+        Linha do tempo do cinema
+        <ChevronDown aria-hidden="true" className={`size-4 text-accent transition-transform ${isExpanded ? "rotate-180" : ""}`} />
+      </button>
+      {isExpanded && (
+        <div id={timelineId} className="mt-4">
+          <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex flex-wrap items-center gap-3">
           <button
             type="button"
@@ -116,7 +129,7 @@ export default function YearButtons({ years, selectedYear, selectedDecade, onSel
         )}
       </div>
       <p className="mt-3 text-xs text-muted">{zoomed ? "Selecione um ano para explorar seus filmes." : "Selecione uma década para ampliar seus anos."}</p>
-      <div ref={viewportRef} id={timelineId} className={styles.viewport}>
+      <div ref={viewportRef} className={styles.viewport}>
         <div
           key={zoomed ? openDecade : "decades"}
           role="group"
@@ -145,6 +158,8 @@ export default function YearButtons({ years, selectedYear, selectedDecade, onSel
         </div>
       </div>
       {points.length === 0 && <p className="py-4 text-sm text-muted">Nenhum ano disponível no catálogo.</p>}
+        </div>
+      )}
     </fieldset>
   );
 }

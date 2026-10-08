@@ -91,6 +91,17 @@ function find(element, predicate) {
 }
 const interactive = loadComponent("YearButtons", { react: hooks }).default;
 
+test("controle do dropdown comunica e alterna o estado de expansão", () => {
+  let nextState;
+  const Dropdown = loadComponent("YearButtons", {
+    react: { ...hooks, useState: (value) => [value, (next) => { nextState = typeof next === "function" ? next(value) : next; }] },
+  }).default;
+  const control = find(Dropdown(defaults), (node) => node.props["aria-controls"] && node.props.children?.[0] === "Linha do tempo do cinema");
+  assert.equal(control.props["aria-expanded"], true);
+  control.props.onClick();
+  assert.equal(nextState, false);
+});
+
 test("clicar na década amplia seus anos; escolher ano e voltar informa os filtros corretos", () => {
   const selections = [];
   const props = { ...defaults, onSelectDecade: (value) => selections.push(["decade", value]), onSelectYear: (value) => selections.push(["year", value]) };

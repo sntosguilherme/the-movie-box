@@ -18,6 +18,7 @@ export type CatalogBrowserProps = {
   nextLimit: number;
   movies: readonly Movie[];
   hasMore: boolean;
+  recentMovies: readonly Movie[];
 };
 
 const filterChip =
@@ -30,7 +31,7 @@ type Filters = {
   limit?: number;
 };
 
-export default function CatalogBrowser({ years, title, year, decade, nextLimit, movies, hasMore }: CatalogBrowserProps) {
+export default function CatalogBrowser({ years, title, year, decade, nextLimit, movies, hasMore, recentMovies }: CatalogBrowserProps) {
   const router = useRouter();
   const [query, setQuery] = useState(title);
   const [isPending, startTransition] = useTransition();
@@ -75,12 +76,12 @@ export default function CatalogBrowser({ years, title, year, decade, nextLimit, 
 
   return (
     <>
-      <Header search={<SearchBar value={query} onChange={changeTitle} />} isLoading={isPending || isLoadingMore} />
+      <Header search={<SearchBar value={query} onChange={changeTitle} recentMovies={recentMovies} />} isLoading={isPending || isLoadingMore} />
       <main className="relative isolate">
         <div className="mx-auto w-full max-w-[1400px] px-4 pb-24 sm:px-6 lg:px-10">
           <section className="animate-fade-up pb-8 pt-10 sm:pt-14">
             <h1 className="font-display text-5xl leading-[0.95] tracking-tight sm:text-7xl">
-              Catálogo de <em className="text-accent">Filmes</em>
+              THE MOVIE BOX.
             </h1>
             <p className="mt-5 max-w-2xl text-base text-muted sm:text-lg">
               Busque pelo início do título e filtre pela década ou pelo ano de lançamento.

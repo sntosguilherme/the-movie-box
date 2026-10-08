@@ -20,7 +20,7 @@ const instrumentSerif = Instrument_Serif({
 });
 
 export const metadata: Metadata = {
-  title: "Catálogo de Filmes — ED II",
+  title: "The Movie Box",
   description: "Pesquisa e navegação em um catálogo de filmes.",
 };
 

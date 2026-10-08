@@ -1,5 +1,6 @@
 import { connection } from "next/server";
 import { Clock3 } from "lucide-react";
+import BackButton from "@/components/BackButton";
 import Header from "@/components/Header";
 import MovieGrid from "@/components/MovieGrid";
 import { getRecentlyOpenedMovies } from "@/lib/catalog";
@@ -13,7 +14,8 @@ export default async function RecentMoviesPage() {
     <>
       <Header />
       <main className="mx-auto w-full max-w-[1400px] px-4 pb-24 pt-10 sm:px-6 sm:pt-14 lg:px-10">
-        <section className="mb-10 animate-fade-up">
+        <BackButton />
+        <section className="mb-10 mt-10 animate-fade-up">
           <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-accent">
             <Clock3 aria-hidden="true" className="size-3.5" />
             Lista Move-to-Front

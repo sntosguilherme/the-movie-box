@@ -14,12 +14,12 @@ export default function Header({ search, isLoading = false }: HeaderProps) {
       className="sticky top-0 z-40 border-b border-white/[0.06] bg-background"
     >
       <div className="mx-auto grid h-20 w-full max-w-[1400px] grid-cols-[1fr_auto] items-center gap-4 px-4 sm:h-24 sm:grid-cols-[1fr_minmax(18rem,32rem)_1fr] sm:px-6 lg:px-10">
-        <Link href="/" className="group inline-flex shrink-0 items-center gap-3 rounded-lg" aria-label="Catálogo de Filmes — página inicial">
+        <Link href="/" className="group inline-flex shrink-0 items-center gap-3 rounded-lg" aria-label="THE MOVIE BOX. — página inicial">
           <span className="grid h-9 w-9 place-items-center rounded-xl bg-accent ring-1 ring-white/15 transition-transform duration-500 ease-smooth group-hover:-rotate-6 group-hover:scale-105">
             <Film aria-hidden="true" className="h-[1.1rem] w-[1.1rem] text-white" strokeWidth={2} />
           </span>
           <span className="hidden leading-tight sm:block">
-            <span className="block text-[0.95rem] font-bold tracking-tight">Catálogo de Filmes</span>
+            <span className="block text-[0.95rem] font-bold tracking-tight">THE MOVIE BOX.</span>
             <span className="block text-[0.7rem] font-medium uppercase tracking-[0.18em] text-muted">Estrutura de Dados II</span>
           </span>
         </Link>
