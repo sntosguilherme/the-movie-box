@@ -24,6 +24,8 @@ export type CatalogBrowserProps = {
 const filterChip =
   "inline-flex h-8 items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.05] pl-3 pr-2 text-sm text-foreground transition-colors hover:border-accent/50 hover:bg-accent/10";
 
+const SEARCH_DEBOUNCE_MS = 300;
+
 type Filters = {
   title: string;
   year: number | null;
@@ -38,6 +40,7 @@ export default function CatalogBrowser({ years, title, year, decade, nextLimit, 
   // Transição separada para a rolagem infinita: carregar a próxima página não esmaece a grade.
   const [isLoadingMore, startLoadingMore] = useTransition();
   const sentinelRef = useRef<HTMLDivElement>(null);
+  const searchDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const hasFilters = query.trim() !== "" || year !== null || decade !== null;
   const storyDecade = year === null ? decade : decadeOf(year);
 
@@ -50,6 +53,15 @@ export default function CatalogBrowser({ years, title, year, decade, nextLimit, 
     const search = params.toString();
     start(() => router.replace(search ? `/?${search}` : "/", { scroll: false }));
   }
+
+  function cancelPendingTitleSearch() {
+    if (searchDebounceRef.current !== null) {
+      clearTimeout(searchDebounceRef.current);
+      searchDebounceRef.current = null;
+    }
+  }
+
+  useEffect(() => cancelPendingTitleSearch, []);
 
   const loadMore = useEffectEvent(() => navigate({ title: query, year, decade, limit: nextLimit }, startLoadingMore));
 
@@ -66,10 +78,15 @@ export default function CatalogBrowser({ years, title, year, decade, nextLimit, 
 
   function changeTitle(value: string) {
     setQuery(value);
-    navigate({ title: value, year, decade });
+    cancelPendingTitleSearch();
+    searchDebounceRef.current = setTimeout(() => {
+      navigate({ title: value, year, decade });
+      searchDebounceRef.current = null;
+    }, SEARCH_DEBOUNCE_MS);
   }
 
   function clearFilters() {
+    cancelPendingTitleSearch();
     setQuery("");
     navigate({ title: "", year: null, decade: null });
   }
