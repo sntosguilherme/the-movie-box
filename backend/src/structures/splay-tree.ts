@@ -4,6 +4,7 @@ class Node {
   left: Node | null = null;
   right: Node | null = null;
   parent: Node | null = null;
+  // MODIFICAÇÃO: GUARDA O NÚMERO DE ABERTURAS
   detailOpens = 0;
 
   constructor(readonly movie: Filme) {}
@@ -11,6 +12,7 @@ class Node {
 
 export class SplayTree {
   private root: Node | null = null;
+
   private count = 0;
 
   get size(): number {
@@ -213,6 +215,7 @@ export class SplayTree {
     }
   }
 
+  // MODIFICAÇÃO: SPLAY PARCIAL PARA MANTER O NÓ EM UMA PROFUNDIDADE ESPECÍFICA
   private splayToDepth(node: Node, targetDepth: number): void {
     while (node.parent && this.nodeDepth(node) > targetDepth) {
       const parent = node.parent;
@@ -229,6 +232,7 @@ export class SplayTree {
     }
   }
 
+  // MODIFICAÇÃO: MÉTODO AUXILIAR PARA CALCULAR A PROFUNDIDADE DE UM NÓ
   private nodeDepth(node: Node): number {
     let depth = 0;
     for (let parent = node.parent; parent; parent = parent.parent) depth++;
